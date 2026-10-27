@@ -92,7 +92,8 @@ slots as (
 )
 insert into public.sessions (course_id, promotion_id, title, kind, starts_at, ends_at, room, trainer_name, description)
 select
-  m.ids[s.module_index],
+  -- L'ECF porte sur l'intégration de maquette : module 1, quel que soit le module du créneau
+  case when s.w = 2 and s.d = 1 and s.start_t = time '13:30' then m.ids[1] else m.ids[s.module_index] end,
   'b0000000-0000-4000-8000-000000000001',
   case when s.w = 2 and s.d = 1 and s.start_t = time '13:30'
     then 'ECF : intégration d''une maquette'
@@ -100,8 +101,8 @@ select
   case when s.w = 2 and s.d = 1 and s.start_t = time '13:30' then 'evaluation' else 'cours' end,
   ((ref.monday + s.w * 7 + s.d) + s.start_t) at time zone 'Europe/Paris',
   ((ref.monday + s.w * 7 + s.d) + s.end_t) at time zone 'Europe/Paris',
-  m.rooms[s.module_index],
-  m.trainers[s.module_index],
+  case when s.w = 2 and s.d = 1 and s.start_t = time '13:30' then m.rooms[1] else m.rooms[s.module_index] end,
+  case when s.w = 2 and s.d = 1 and s.start_t = time '13:30' then m.trainers[1] else m.trainers[s.module_index] end,
   case when s.w = 2 and s.d = 1 and s.start_t = time '13:30'
     then 'Évaluation en cours de formation, individuelle, 3 h 30. Ordinateur portable chargé.'
     else 'Séance au campus.' end

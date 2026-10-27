@@ -106,6 +106,209 @@ export async function getCompanyPeriods(fromKey?: string, toKey?: string): Promi
   return (data ?? []).map((row) => ({ id: row.id, startsOn: row.starts_on, endsOn: row.ends_on, note: row.note }));
 }
 
+export type CourseSummary = {
+  id: string;
+  title: string;
+  description: string;
+  competencyBlock: string | null;
+  sessionsTotal: number;
+  sessionsDone: number;
+  materialsCount: number;
+  assignmentsCount: number;
+  nextSessionAt: string | null;
+};
+
+/** Les modules de la formation, avec la progression des séances de la promotion. */
+export async function getCourses(now: Date): Promise<CourseSummary[]> {
+  const supabase = await studentClient();
+  const [courses, sessions, materials, assignments] = await Promise.all([
+    supabase.from("courses").select("id, title, description, competency_block, position").order("position"),
+    supabase.from("sessions").select("course_id, starts_at, ends_at").not("course_id", "is", null),
+    supabase.from("materials").select("course_id"),
+    supabase.from("assignments").select("course_id"),
+  ]);
+  const error = courses.error ?? sessions.error ?? materials.error ?? assignments.error;
+  if (error) throw new Error(`Chargement des cours impossible : ${error.message}`);
+
+  const nowIso = now.toISOString();
+  return (courses.data ?? []).map((course) => {
+    const own = (sessions.data ?? []).filter((s) => s.course_id === course.id);
+    const upcoming = own.filter((s) => s.ends_at >= nowIso).map((s) => s.starts_at).sort();
+    return {
+      id: course.id,
+      title: course.title,
+      description: course.description,
+      competencyBlock: course.competency_block,
+      sessionsTotal: own.length,
+      sessionsDone: own.length - upcoming.length,
+      materialsCount: (materials.data ?? []).filter((m) => m.course_id === course.id).length,
+      assignmentsCount: (assignments.data ?? []).filter((a) => a.course_id === course.id).length,
+      nextSessionAt: upcoming[0] ?? null,
+    };
+  });
+}
+
+export type MaterialItem = {
+  id: string;
+  title: string;
+  isFile: boolean;
+  linkHost: string | null;
+  courseId: string;
+  courseTitle: string | null;
+  createdAt: string;
+};
+
+function toMaterial(row: {
+  id: string;
+  title: string;
+  file_path: string | null;
+  link_url: string | null;
+  course_id: string;
+  created_at: string;
+  course: { title: string } | null;
+}): MaterialItem {
+  let linkHost: string | null = null;
+  if (row.link_url) {
+    try {
+      linkHost = new URL(row.link_url).hostname.replace(/^www\./, "");
+    } catch {
+      linkHost = null;
+    }
+  }
+  return {
+    id: row.id,
+    title: row.title,
+    isFile: !!row.file_path,
+    linkHost,
+    courseId: row.course_id,
+    courseTitle: row.course?.title ?? null,
+    createdAt: row.created_at,
+  };
+}
+
+const MATERIAL_FIELDS = "id, title, file_path, link_url, course_id, created_at, course:courses(title)";
+
+/** Les ressources visibles (la RLS masque celles programmées plus tard). */
+export async function getMaterials(): Promise<MaterialItem[]> {
+  const supabase = await studentClient();
+  const { data, error } = await supabase.from("materials").select(MATERIAL_FIELDS).order("created_at", { ascending: false });
+  if (error) throw new Error(`Chargement des ressources impossible : ${error.message}`);
+  return (data ?? []).map(toMaterial);
+}
+
+/**
+ * Où mène une ressource : URL signée de 60 s pour un fichier du bucket « materials »,
+ * lien externe (http ou https uniquement) sinon. Null si la ressource n'est pas visible.
+ */
+export async function getMaterialTarget(materialId: string): Promise<string | null> {
+  const supabase = await studentClient();
+  const { data, error } = await supabase
+    .from("materials")
+    .select("file_path, link_url")
+    .eq("id", materialId)
+    .maybeSingle();
+  if (error || !data) return null;
+
+  if (data.file_path) {
+    const { data: signed } = await supabase.storage.from("materials").createSignedUrl(data.file_path, 60);
+    return signed?.signedUrl ?? null;
+  }
+  if (data.link_url) {
+    try {
+      const url = new URL(data.link_url);
+      return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+export type AssignmentItem = {
+  id: string;
+  title: string;
+  instructions: string;
+  dueAt: string;
+  requiresFile: boolean;
+  courseId: string;
+  courseTitle: string | null;
+  submission: { id: string; filePath: string | null; comment: string; submittedAt: string; updatedAt: string } | null;
+  status: AssignmentStatus;
+};
+
+/** Tout le travail de la promotion, avec le rendu de la personne connectée. */
+export async function getAssignments(now: Date, courseId?: string): Promise<AssignmentItem[]> {
+  const supabase = await studentClient();
+  let query = supabase
+    .from("assignments")
+    .select(
+      "id, title, instructions, due_at, requires_file, course_id, course:courses(title), submissions(id, file_path, comment, submitted_at, updated_at)",
+    )
+    .order("due_at");
+  if (courseId) query = query.eq("course_id", courseId);
+  const { data, error } = await query;
+  if (error) throw new Error(`Chargement du travail à rendre impossible : ${error.message}`);
+
+  return (data ?? []).map((row) => {
+    const submission = row.submissions[0] ?? null;
+    return {
+      id: row.id,
+      title: row.title,
+      instructions: row.instructions,
+      dueAt: row.due_at,
+      requiresFile: row.requires_file,
+      courseId: row.course_id,
+      courseTitle: row.course?.title ?? null,
+      submission: submission
+        ? {
+            id: submission.id,
+            filePath: submission.file_path,
+            comment: submission.comment,
+            submittedAt: submission.submitted_at,
+            updatedAt: submission.updated_at,
+          }
+        : null,
+      status: assignmentStatus(row.due_at, submission?.submitted_at ?? null, now),
+    };
+  });
+}
+
+export type CourseDetail = {
+  id: string;
+  title: string;
+  description: string;
+  objectives: string[];
+  competencyBlock: string | null;
+  sessions: DashboardSession[];
+  materials: MaterialItem[];
+  assignments: AssignmentItem[];
+};
+
+/** Un module, ses séances, ses ressources et son travail à rendre (null s'il n'est pas visible). */
+export async function getCourse(courseId: string, now: Date): Promise<CourseDetail | null> {
+  const supabase = await studentClient();
+  const [course, sessions, materials, assignments] = await Promise.all([
+    supabase.from("courses").select("id, title, description, objectives, competency_block").eq("id", courseId).maybeSingle(),
+    supabase.from("sessions").select(SESSION_FIELDS).eq("course_id", courseId).order("starts_at"),
+    supabase.from("materials").select(MATERIAL_FIELDS).eq("course_id", courseId).order("created_at", { ascending: false }),
+    getAssignments(now, courseId),
+  ]);
+  const error = course.error ?? sessions.error ?? materials.error;
+  if (error) throw new Error(`Chargement du module impossible : ${error.message}`);
+  if (!course.data) return null;
+
+  return {
+    id: course.data.id,
+    title: course.data.title,
+    description: course.data.description,
+    objectives: course.data.objectives,
+    competencyBlock: course.data.competency_block,
+    sessions: (sessions.data ?? []).map(toSession),
+    materials: (materials.data ?? []).map(toMaterial),
+    assignments,
+  };
+}
+
 export type TodoAssignment = {
   id: string;
   title: string;
