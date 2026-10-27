@@ -26,7 +26,9 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
   En pratique : **chaque page de `/etudiant/*` a son `loading.tsx`** (la navigation
   instantanée l'exige, même si le layout a déjà son Suspense), et les données passent par
   `getViewer()` / `lib/data/*`, qui appellent `connection()` avant le client Supabase (il
-  lit l'heure, interdit pendant un pré-rendu).
+  lit l'heure, interdit pendant un pré-rendu). Même règle pour `new Date()` dans une page :
+  seulement après `await getViewer()` ou `await connection()`. Le build ne le détecte pas
+  sur les routes à paramètres (`[courseId]`) : vérifier le journal du serveur de dev.
 - **Auth** : connexion et déconnexion par actions serveur ; les liens d'e-mail arrivent sur
   `/auth/reinitialiser` (invitation, oubli) ou `/auth/confirm`, et le jeton n'est consommé
   qu'au clic. Toute redirection après un lien passe par `safeNextPath()`.

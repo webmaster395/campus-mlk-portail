@@ -9,6 +9,8 @@ export type Viewer = {
   fullName: string;
   email: string;
   avatarPath: string | null;
+  /** URL signée (1 h) de la photo de profil, bucket privé « avatars » */
+  avatarUrl: string | null;
   companyName: string | null;
   deactivated: boolean;
   createdAt: string;
@@ -52,6 +54,10 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
   if (!data) return null;
 
   const context = data as unknown as ViewerContext;
+  const avatarUrl = context.avatar_path
+    ? ((await supabase.storage.from("avatars").createSignedUrl(context.avatar_path, 3600)).data?.signedUrl ?? null)
+    : null;
+
   return {
     id: context.id,
     firstName: context.first_name,
@@ -59,6 +65,7 @@ export const getViewer = cache(async (): Promise<Viewer | null> => {
     fullName: `${context.first_name} ${context.last_name}`.trim() || context.email,
     email: context.email,
     avatarPath: context.avatar_path,
+    avatarUrl,
     companyName: context.company_name,
     deactivated: context.deactivated,
     createdAt: context.created_at,

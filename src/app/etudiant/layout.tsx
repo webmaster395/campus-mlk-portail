@@ -30,6 +30,7 @@ async function StudentShell({ children }: { children: React.ReactNode }) {
     <ProfileBlock
       fullName={viewer.fullName}
       subtitle={viewer.promotion?.label ?? "En attente de promotion"}
+      avatarUrl={viewer.avatarUrl}
     />
   );
 

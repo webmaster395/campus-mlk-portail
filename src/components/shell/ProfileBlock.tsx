@@ -8,9 +8,11 @@ import { signOut } from "@/lib/actions/auth";
 export default function ProfileBlock({
   fullName,
   subtitle,
+  avatarUrl,
 }: {
   fullName: string;
   subtitle: string;
+  avatarUrl: string | null;
 }) {
   return (
     <div className="flex items-center gap-2">
@@ -18,7 +20,7 @@ export default function ProfileBlock({
         href="/etudiant/profil"
         className="flex min-w-0 flex-1 items-center gap-3 rounded-xl p-2 transition-colors hover:bg-white/[0.06]"
       >
-        <Avatar name={fullName} size={38} />
+        <Avatar name={fullName} size={38} src={avatarUrl} />
         <span className="min-w-0">
           <span className="block truncate text-sm font-semibold text-white">{fullName}</span>
           <span className="block truncate text-xs text-white/55">{subtitle}</span>

@@ -368,12 +368,10 @@ de l'espace étudiant (seule la RLS protège les données), dates en `Europe/Par
 
 ## 7. Questions ouvertes (à trancher avant ou pendant l'étape concernée)
 
-1. **« Notes » = évaluations ?** Pour un titre professionnel, l'évaluation se fait souvent
-   par compétences (ECF, acquis / non acquis) plutôt que sur 20. Le schéma prévoit les
-   deux. Faut-il afficher des moyennes ? *(étape 4.6)*
-2. **Messages** : annonces à sens unique (comme Ministry School) en phase 1, ou vraie
-   messagerie étudiant ↔ CFA ? *(étape 4.7, recommandation : annonces seules pour
-   l'instant)*
+1. ~~**« Notes » = évaluations ?**~~ **Tranché** : note chiffrée et/ou résultat par
+   compétence, avec une moyenne indicative pondérée (à confirmer avec le CFA).
+2. ~~**Messages**~~ **Tranché** : annonces à sens unique en phase 1 ; une messagerie
+   étudiant ↔ CFA viendra avec l'espace gestion si besoin.
 3. ~~**Création des comptes**~~ **Tranché** : inscription libre sur `/inscription` (lien
    depuis `/login`), contrairement à Ministry School (pas d'adresse secrète). Le compte
    naît **sans promotion** et le CFA le rattache (`profiles.promotion_id`) : la promotion
@@ -453,7 +451,7 @@ Si le travail est repris en cours de route :
   `loading.tsx`, `error.tsx` de l'espace, 404 aux couleurs MLK, état « en attente de
   rattachement » pour un compte sans promotion. Menu défini dans `src/lib/nav.ts`.
   Testé : ordinateur et mobile, comptes Inès et Sam, navigation, déconnexion par le menu.
-- [ ] Étape 4 : sections (4.1 → 4.8)
+- [x] Étape 4 : sections (4.1 → 4.8)
   - [x] 4.1 Tableau de bord : date du jour, prochaine journée au campus (carte graphite :
     séances, horaires, salle, formateur, « Dans N jours »), travail à rendre (en retard
     d'abord, 3 max), dernière annonce (« Nouveau » si non lue), dernières notes (note
@@ -471,4 +469,22 @@ Si le travail est repris en cours de route :
     promotion, précision facultative), migration `company_periods`, RLS vérifiée ;
     un rythme régulier se génère en une requête (voir `seed.sql`). Calculs de jours
     dans `src/lib/calendar.ts`, fichier iCalendar dans `src/lib/ics.ts`, avec tests.
+  - [x] 4.3 Cours : liste des modules (bloc de compétences, progression des séances,
+    compteurs, prochaine séance) et fiche (objectifs, séances à venir / passées,
+    ressources, travail). Module d'une autre formation → 404.
+  - [x] 4.4 Ressources : regroupées et filtrables par module ; ouverture par
+    `/etudiant/ressources/[id]/ouvrir` (RLS, puis URL signée 60 s ou lien http/https).
+    Le cas « fichier » n'est pas testé de bout en bout (aucun fichier dans le bucket
+    `materials` : le CFA en déposera via Studio).
+  - [x] 4.5 Travail à rendre : onglets À faire / En retard / Rendus, dépôt direct
+    navigateur → bucket `submissions`, puis action `saveSubmission` ; remplacement avec
+    suppression de l'ancien fichier ; téléchargement de son rendu par URL signée ; dépôt
+    fermé après l'échéance. Testé avec un vrai fichier (dépôt, remplacement, téléchargement).
+  - [x] 4.6 Notes : par module, note chiffrée et/ou compétence, commentaire, moyenne
+    indicative pondérée (question 1 tranchée : moyenne affichée, présentée comme indicative).
+  - [x] 4.7 Messages : annonces (question 2 tranchée : sens unique), « Nouveau »,
+    portée (promotion / tout le CFA), « Tout marquer comme lu » (pastilles mises à jour).
+  - [x] 4.8 Profil : informations (gérées par le CFA), photo (bucket privé `avatars`,
+    affichée aussi dans le menu, URL signée 1 h), retrait de la photo, changement de mot
+    de passe avec vérification du mot de passe actuel. Testé de bout en bout.
 - [ ] Étape 5 : finition et mise en ligne

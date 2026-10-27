@@ -1,5 +1,28 @@
-/** Pastille avec les initiales (la photo de profil arrive avec la page Profil). */
-export default function Avatar({ name, size = 40 }: { name: string; size?: number }) {
+/** Photo de profil, ou pastille avec les initiales s'il n'y en a pas. */
+export default function Avatar({
+  name,
+  size = 40,
+  src = null,
+}: {
+  name: string;
+  size?: number;
+  src?: string | null;
+}) {
+  if (src) {
+    return (
+      // URL signée et temporaire du bucket privé : pas d'optimisation next/image
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt=""
+        width={size}
+        height={size}
+        className="shrink-0 rounded-full object-cover"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+
   const initials =
     name
       .split(/\s+/)

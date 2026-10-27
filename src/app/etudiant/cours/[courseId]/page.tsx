@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { ArrowLeft, Check, ClipboardList, FolderOpen, MapPin, UserRound } from "lucide-react";
 import MaterialList from "@/components/course/MaterialList";
 import { CardEmpty } from "@/components/dashboard/DashboardCard";
@@ -18,6 +19,8 @@ export default async function CoursePage({ params }: PageProps<"/etudiant/cours/
   const { courseId } = await params;
   if (!isUuid(courseId)) notFound();
 
+  // Rendu à la requête avant de lire l'heure (Cache Components refuse new Date() en pré-rendu)
+  await connection();
   const now = new Date();
   // La RLS ne renvoie le module que s'il appartient à la formation de la personne
   const course = await getCourse(courseId, now);
