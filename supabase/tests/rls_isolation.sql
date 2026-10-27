@@ -11,7 +11,8 @@
 --   B_ntc       : formations 1, promotions 1, profiles 1, courses 1, sessions 1, materials 1,
 --                 assignments 1, evaluations 0, grades 0, announcements 2
 --   C_desactive : tout à 0 sauf profiles 1
---   trigger_profils : promotion lue des métadonnées pour A et B, « null » pour C (uuid invalide)
+--   trigger_profils : promotion lue des métadonnées d'application pour A et B, « null » pour C
+--                     (promotion choisie par lui-même dans ses métadonnées utilisateur : ignorée)
 --   A_depot_devoir_futur « autorisé », A_marque_annonces_lues 1, A_modifie_avatar_de_B_lignes 0,
 --   tout le reste « refusé ».
 
@@ -27,15 +28,20 @@ declare
   who uuid;
 begin
   -- Comptes fictifs : A et C (désactivé) dans la promo DWWM, B dans la promo NTC.
-  -- Le trigger handle_new_user doit créer les profils et lire la promotion des métadonnées.
-  insert into auth.users (id, instance_id, aud, role, email, raw_user_meta_data, created_at, updated_at)
+  -- Le trigger handle_new_user lit la promotion dans les métadonnées d'application (posées
+  -- par le CFA), jamais dans celles de l'utilisateur : C tente de choisir sa promotion
+  -- lui-même, comme le ferait un inscrit malveillant, et doit obtenir « null ».
+  insert into auth.users (id, instance_id, aud, role, email, raw_app_meta_data, raw_user_meta_data, created_at, updated_at)
   values
     (ua, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-a@test.invalid',
-      '{"first_name":"Alice","last_name":"Test","promotion_id":"b0000000-0000-4000-8000-000000000001"}', now(), now()),
+      '{"provider":"email","promotion_id":"b0000000-0000-4000-8000-000000000001"}',
+      '{"first_name":"Alice","last_name":"Test"}', now(), now()),
     (ub, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-b@test.invalid',
-      '{"first_name":"Bruno","last_name":"Test","promotion_id":"b0000000-0000-4000-8000-000000000002"}', now(), now()),
+      '{"provider":"email","promotion_id":"b0000000-0000-4000-8000-000000000002"}',
+      '{"first_name":"Bruno","last_name":"Test"}', now(), now()),
     (uc, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', 'rls-c@test.invalid',
-      '{"first_name":"Chloé","last_name":"Test","promotion_id":"pas-un-uuid"}', now(), now());
+      '{"provider":"email"}',
+      '{"first_name":"Chloé","last_name":"Test","promotion_id":"b0000000-0000-4000-8000-000000000001"}', now(), now());
 
   select jsonb_object_agg(email, coalesce(promotion_id::text, 'null')) into ctx from public.profiles where id in (ua, ub, uc);
   r := r || jsonb_build_object('trigger_profils', ctx);

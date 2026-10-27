@@ -19,6 +19,28 @@ export function signInErrorMessage(code: string | undefined, message = ""): stri
   return "E-mail ou mot de passe incorrect.";
 }
 
+/** Message affiché quand la création de compte échoue. */
+export function signUpErrorMessage(code: string | undefined, message = ""): string {
+  const text = message.toLowerCase();
+  // Renvoyé seulement si la confirmation d'e-mail est désactivée dans Supabase
+  if (code === "user_already_exists" || code === "email_exists" || text.includes("already registered")) {
+    return "Un compte existe déjà avec cette adresse. Connectez-vous, ou utilisez « Mot de passe oublié ».";
+  }
+  if (code === "weak_password" || text.includes("weak")) {
+    return "Ce mot de passe est trop simple. Choisissez-en un plus long ou plus varié.";
+  }
+  if (code === "signup_disabled" || text.includes("signups not allowed")) {
+    return `Les inscriptions sont fermées pour le moment. Contactez l'équipe de MLK Campus (${SUPPORT_EMAIL}).`;
+  }
+  if (code === "over_email_send_rate_limit" || code === "over_request_rate_limit" || text.includes("rate limit")) {
+    return "Trop de demandes en peu de temps. Réessayez dans quelques minutes.";
+  }
+  if (code === "email_address_invalid" || code === "email_address_not_authorized" || text.includes("email address")) {
+    return "Cette adresse e-mail ne peut pas être utilisée. Vérifiez-la, ou essayez une autre adresse.";
+  }
+  return "Le compte n'a pas pu être créé. Réessayez dans un instant.";
+}
+
 /** Message affiché quand le nouveau mot de passe est refusé. */
 export function passwordErrorMessage(code: string | undefined, message = ""): string {
   const text = message.toLowerCase();

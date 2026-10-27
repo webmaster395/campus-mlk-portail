@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Pages des visiteurs non connectés ; une personne connectée y est renvoyée vers son espace
-const GUEST_PATHS = ["/login", "/mot-de-passe-oublie"];
+const GUEST_PATHS = ["/login", "/inscription", "/mot-de-passe-oublie"];
 
 function redirectTo(request: NextRequest, pathname: string, response: NextResponse) {
   const url = request.nextUrl.clone();

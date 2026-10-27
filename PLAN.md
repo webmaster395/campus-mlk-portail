@@ -129,7 +129,7 @@ Campus-MLK-Portail/
       env.ts
 ```
 
-Pas de page publique `/inscription` : voir la question ouverte n° 3.
+`/inscription` : création de compte libre (décision du 27/10/2026, voir question n° 3).
 
 ---
 
@@ -374,10 +374,12 @@ de l'espace étudiant (seule la RLS protège les données), dates en `Europe/Par
 2. **Messages** : annonces à sens unique (comme Ministry School) en phase 1, ou vraie
    messagerie étudiant ↔ CFA ? *(étape 4.7, recommandation : annonces seules pour
    l'instant)*
-3. **Création des comptes** : les apprentis ne s'inscrivent pas eux-mêmes. Le CFA les
-   **invite par e-mail** depuis Supabase et ils définissent leur mot de passe au premier
-   accès. Cela remplace la page `/inscription` de l'arborescence initiale. À confirmer.
-   *(étape 1-2)*
+3. ~~**Création des comptes**~~ **Tranché** : inscription libre sur `/inscription` (lien
+   depuis `/login`), contrairement à Ministry School (pas d'adresse secrète). Le compte
+   naît **sans promotion** et le CFA le rattache (`profiles.promotion_id`) : la promotion
+   ouvre l'accès aux données, l'inscrit ne peut donc pas la choisir (le trigger ne la lit
+   que dans `raw_app_meta_data`, jamais dans les métadonnées envoyées à l'inscription).
+   L'invitation par le CFA reste possible.
 4. **Projet Supabase** : nouveau projet dédié (recommandé), créé par toi dans le tableau
    de bord, ou par moi via le connecteur Supabase. La création peut avoir un coût selon
    ton offre, je te le confirmerai avant. *(étape 1)*
@@ -414,26 +416,30 @@ Si le travail est repris en cours de route :
   rendu et notes), Yanis (NTC), Léa (désactivée), Sam (sans promotion). Vérifier qu'ils
   se connectent : `node scripts/test-accounts.mjs check`. Les effacer :
   `supabase/comptes-test-suppression.sql`.
-  **Reste à faire par le propriétaire du compte Supabase** : désactiver les inscriptions
-  publiques et régler les URL de redirection (Authentication) ; renseigner
-  `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
+  **Reste à faire par le propriétaire du compte Supabase** : réglages Auth de l'étape 2 ;
+  renseigner `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
 - [x] Étape 2 : authentification. Connexion (action serveur), déconnexion, mot de passe
   oublié, `/auth/callback` (PKCE), `/auth/confirm`, `/auth/reinitialiser` (premier mot de
   passe après invitation, ou nouveau mot de passe), `/auth/desactive`, `proxy.ts`, garde de
   `/etudiant` (`getViewer`). Testé dans le navigateur avec les comptes de test : connexion,
   erreur, déconnexion, compte désactivé, redirections sans session.
+  **Inscription libre** (`/inscription`, ajoutée ensuite) : prénom, nom, e-mail, mot de
+  passe ; compte créé sans promotion, rattaché par le CFA (migration
+  `inscription_publique` : le trigger ignore toute promotion envoyée par l'inscrit).
   **Réglages Supabase à faire (Authentication)** :
-  1. *Sign In / Providers* : désactiver « Allow new users to sign up ».
+  1. *Sign In / Providers* : laisser « Allow new users to sign up » **activé** et
+     « Confirm email » activé (l'adresse doit être vérifiée).
   2. *URL Configuration* : Site URL = adresse du portail ; Redirect URLs =
      `http://localhost:3000/**` et l'adresse de production `/**`.
-  3. *Emails > Templates* : lien d'invitation
-     `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=invite`, lien de
-     réinitialisation `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=recovery`
-     (le jeton n'est consommé qu'au clic sur « Enregistrer »). Sans ce réglage, la
-     réinitialisation marche quand même via `/auth/callback`, mais pas l'invitation.
+  3. *Emails > Templates* (recommandé : le jeton n'est consommé qu'au clic) :
+     « Confirm signup » → `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email` ;
+     « Invite user » → `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=invite` ;
+     « Reset password » → `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=recovery`.
+     Sans ce réglage, confirmation et réinitialisation marchent via `/auth/callback`
+     (dans le même navigateur), mais pas l'invitation.
   4. *SMTP* : le SMTP par défaut de Supabase n'envoie qu'aux membres de l'équipe du projet
      et quelques e-mails par heure. Un SMTP à soi (ex. campus@mlkgrandparis.com) est
-     indispensable avant d'inviter de vrais apprentis.
+     indispensable avant d'ouvrir l'inscription à de vrais apprentis.
   5. Désactiver un apprenti : `profiles.deactivated = true` (l'accès est coupé) ; pour
      bloquer aussi la connexion elle-même, le bannir dans Authentication > Users.
 - [ ] Étape 3 : coquille

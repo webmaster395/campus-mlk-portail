@@ -50,10 +50,12 @@ async function generate() {
   const { accounts } = await loadCredentials();
 
   const users = accounts.map((a) => {
-    const metadata = JSON.stringify({ first_name: a.first_name, last_name: a.last_name, ...(a.promotion_id ? { promotion_id: a.promotion_id } : {}) });
+    // La promotion va dans les métadonnées d'application : seules lues par le trigger
+    const appMetadata = JSON.stringify({ provider: "email", providers: ["email"], is_test_account: true, ...(a.promotion_id ? { promotion_id: a.promotion_id } : {}) });
+    const metadata = JSON.stringify({ first_name: a.first_name, last_name: a.last_name });
     return `  (${sqlString(a.id)}, '00000000-0000-0000-0000-000000000000', 'authenticated', 'authenticated', ${sqlString(a.email)},
     extensions.crypt(${sqlString(a.password)}, extensions.gen_salt('bf')), now(),
-    '{"provider":"email","providers":["email"],"is_test_account":true}', ${sqlString(metadata)},
+    ${sqlString(appMetadata)}, ${sqlString(metadata)},
     now(), now(), '', '', '', '')`;
   });
   const identities = accounts.map((a) => {

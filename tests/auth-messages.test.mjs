@@ -5,7 +5,17 @@ import {
   passwordErrorMessage,
   safeNextPath,
   signInErrorMessage,
+  signUpErrorMessage,
 } from "../src/lib/auth-messages.ts";
+
+test("les erreurs d'inscription sont traduites", () => {
+  assert.match(signUpErrorMessage("user_already_exists"), /existe déjà/);
+  assert.match(signUpErrorMessage("weak_password"), /trop simple/);
+  assert.match(signUpErrorMessage("signup_disabled"), /fermées/);
+  assert.match(signUpErrorMessage("over_email_send_rate_limit"), /Trop de demandes/);
+  assert.match(signUpErrorMessage("email_address_invalid"), /ne peut pas être utilisée/);
+  assert.match(signUpErrorMessage("unexpected_failure"), /n'a pas pu être créé/);
+});
 
 test("les erreurs de connexion ne révèlent pas si le compte existe", () => {
   assert.equal(signInErrorMessage("invalid_credentials"), "E-mail ou mot de passe incorrect.");
