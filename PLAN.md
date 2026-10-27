@@ -417,7 +417,25 @@ Si le travail est repris en cours de route :
   **Reste à faire par le propriétaire du compte Supabase** : désactiver les inscriptions
   publiques et régler les URL de redirection (Authentication) ; renseigner
   `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
-- [ ] Étape 2 : authentification
+- [x] Étape 2 : authentification. Connexion (action serveur), déconnexion, mot de passe
+  oublié, `/auth/callback` (PKCE), `/auth/confirm`, `/auth/reinitialiser` (premier mot de
+  passe après invitation, ou nouveau mot de passe), `/auth/desactive`, `proxy.ts`, garde de
+  `/etudiant` (`getViewer`). Testé dans le navigateur avec les comptes de test : connexion,
+  erreur, déconnexion, compte désactivé, redirections sans session.
+  **Réglages Supabase à faire (Authentication)** :
+  1. *Sign In / Providers* : désactiver « Allow new users to sign up ».
+  2. *URL Configuration* : Site URL = adresse du portail ; Redirect URLs =
+     `http://localhost:3000/**` et l'adresse de production `/**`.
+  3. *Emails > Templates* : lien d'invitation
+     `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=invite`, lien de
+     réinitialisation `{{ .SiteURL }}/auth/reinitialiser?token_hash={{ .TokenHash }}&type=recovery`
+     (le jeton n'est consommé qu'au clic sur « Enregistrer »). Sans ce réglage, la
+     réinitialisation marche quand même via `/auth/callback`, mais pas l'invitation.
+  4. *SMTP* : le SMTP par défaut de Supabase n'envoie qu'aux membres de l'équipe du projet
+     et quelques e-mails par heure. Un SMTP à soi (ex. campus@mlkgrandparis.com) est
+     indispensable avant d'inviter de vrais apprentis.
+  5. Désactiver un apprenti : `profiles.deactivated = true` (l'accès est coupé) ; pour
+     bloquer aussi la connexion elle-même, le bannir dans Authentication > Users.
 - [ ] Étape 3 : coquille
 - [ ] Étape 4 : sections (4.1 → 4.8)
 - [ ] Étape 5 : finition et mise en ligne

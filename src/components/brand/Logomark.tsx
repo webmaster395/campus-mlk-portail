@@ -13,9 +13,12 @@ export type LogomarkVariant = "principal" | "iris" | "blanc";
 export default function Logomark({
   size = 24,
   variant = "principal",
+  priority = false,
 }: {
   size?: number;
   variant?: LogomarkVariant;
+  /** À activer quand le logomark est le plus grand élément visible au chargement */
+  priority?: boolean;
 }) {
   return (
     <Image
@@ -24,6 +27,7 @@ export default function Logomark({
       width={size}
       height={size}
       style={{ display: "inline-block", verticalAlign: "middle" }}
+      priority={priority}
       aria-hidden
     />
   );

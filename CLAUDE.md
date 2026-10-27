@@ -17,6 +17,15 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
   lecture de cookies / session / données par utilisateur doit être dans un composant
   enveloppé de `<Suspense>`, ou dans une route avec `loading.tsx`. Voir
   `node_modules/next/dist/docs/01-app/01-getting-started/08-caching.md`.
+  En pratique : **chaque page de `/etudiant/*` a son `loading.tsx`** (la navigation
+  instantanée l'exige, même si le layout a déjà son Suspense), et les données passent par
+  `getViewer()` / `lib/data/*`, qui appellent `connection()` avant le client Supabase (il
+  lit l'heure, interdit pendant un pré-rendu).
+- **Auth** : connexion et déconnexion par actions serveur ; les liens d'e-mail arrivent sur
+  `/auth/reinitialiser` (invitation, oubli) ou `/auth/confirm`, et le jeton n'est consommé
+  qu'au clic. Toute redirection après un lien passe par `safeNextPath()`.
+- **Comptes de test** : `node scripts/test-accounts.mjs check` (identifiants dans
+  `supabase/comptes-test.local.json`, jamais dans le chat ni dans git).
 - **Supabase** (projet `xmxpgnxeehvkvnsvrynt`) : la RLS protège toutes les données de
   l'espace étudiant. Jamais de clé `service_role` dans le code de l'espace étudiant.
   Schéma versionné dans `supabase/migrations/` uniquement, nom de fichier = version
