@@ -289,6 +289,62 @@ export async function getSubmissionFileUrl(assignmentId: string): Promise<string
   return signed?.signedUrl ?? null;
 }
 
+export type GradeReportCourse = {
+  courseId: string;
+  courseTitle: string;
+  evaluations: {
+    id: string;
+    title: string;
+    heldOn: string;
+    maxScore: number;
+    coefficient: number;
+    score: number | null;
+    result: string | null;
+    comment: string;
+    graded: boolean;
+  }[];
+};
+
+/**
+ * Les évaluations publiées de la promotion, regroupées par module (ordre du programme),
+ * avec la note de la personne connectée quand elle existe.
+ */
+export async function getGradeReport(): Promise<GradeReportCourse[]> {
+  const supabase = await studentClient();
+  const { data, error } = await supabase
+    .from("evaluations")
+    .select("id, title, held_on, max_score, coefficient, course:courses(id, title, position), grades(score, result, comment)")
+    .order("held_on");
+  if (error) throw new Error(`Chargement des notes impossible : ${error.message}`);
+
+  const byCourse = new Map<string, GradeReportCourse & { position: number }>();
+  for (const row of data ?? []) {
+    if (!row.course) continue;
+    const grade = row.grades[0] ?? null;
+    const group = byCourse.get(row.course.id) ?? {
+      courseId: row.course.id,
+      courseTitle: row.course.title,
+      position: row.course.position,
+      evaluations: [],
+    };
+    group.evaluations.push({
+      id: row.id,
+      title: row.title,
+      heldOn: row.held_on,
+      maxScore: row.max_score,
+      coefficient: row.coefficient,
+      score: grade?.score ?? null,
+      result: grade?.result ?? null,
+      comment: grade?.comment ?? "",
+      graded: !!grade,
+    });
+    byCourse.set(row.course.id, group);
+  }
+  return [...byCourse.values()]
+    .sort((a, b) => a.position - b.position)
+    .map((course) => ({ courseId: course.courseId, courseTitle: course.courseTitle, evaluations: course.evaluations }));
+}
+
 export type CourseDetail = {
   id: string;
   title: string;

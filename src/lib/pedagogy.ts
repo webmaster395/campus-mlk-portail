@@ -48,6 +48,24 @@ export function competencyResult(value: string | null): { label: string; tone: T
   return value && value in RESULT_LABELS ? RESULT_LABELS[value as CompetencyResult] : null;
 }
 
+/**
+ * Moyenne indicative sur 20 : chaque note ramenée sur 20 et pondérée par le coefficient de
+ * son évaluation. Les évaluations sans note chiffrée (compétences seules) sont ignorées.
+ * Null s'il n'y a aucune note chiffrée.
+ */
+export function weightedAverage(
+  items: { score: number | null; maxScore: number; coefficient: number }[],
+): number | null {
+  let total = 0;
+  let weights = 0;
+  for (const item of items) {
+    if (item.score === null || item.maxScore <= 0 || item.coefficient <= 0) continue;
+    total += (item.score / item.maxScore) * 20 * item.coefficient;
+    weights += item.coefficient;
+  }
+  return weights ? Math.round((total / weights) * 100) / 100 : null;
+}
+
 /** Types de séance tels qu'affichés (les cours n'ont pas de pastille). */
 export function sessionKind(kind: string): { label: string; tone: Tone } | null {
   if (kind === "evaluation") return { label: "Évaluation", tone: "warning" };

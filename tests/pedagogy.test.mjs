@@ -1,6 +1,27 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { assignmentStatus, compareTodo, competencyResult, sessionKind } from "../src/lib/pedagogy.ts";
+import { assignmentStatus, compareTodo, competencyResult, sessionKind, weightedAverage } from "../src/lib/pedagogy.ts";
+
+test("moyenne indicative : notes ramenées sur 20 et pondérées", () => {
+  assert.equal(weightedAverage([]), null);
+  assert.equal(weightedAverage([{ score: 15.5, maxScore: 20, coefficient: 1 }]), 15.5);
+  // 15,5/20 coef 1 et 13/20 coef 2 → (15,5 + 26) / 3 = 13,83
+  assert.equal(
+    weightedAverage([
+      { score: 15.5, maxScore: 20, coefficient: 1 },
+      { score: 13, maxScore: 20, coefficient: 2 },
+    ]),
+    13.83,
+  );
+  // Une note sur 10 compte comme sur 20 ; une évaluation sans note chiffrée est ignorée
+  assert.equal(
+    weightedAverage([
+      { score: 8, maxScore: 10, coefficient: 1 },
+      { score: null, maxScore: 20, coefficient: 3 },
+    ]),
+    16,
+  );
+});
 
 const now = new Date("2026-10-27T12:00:00Z");
 
