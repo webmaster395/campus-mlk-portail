@@ -451,4 +451,12 @@ Si le travail est repris en cours de route :
   rattachement » pour un compte sans promotion. Menu défini dans `src/lib/nav.ts`.
   Testé : ordinateur et mobile, comptes Inès et Sam, navigation, déconnexion par le menu.
 - [ ] Étape 4 : sections (4.1 → 4.8)
+  - [x] 4.1 Tableau de bord : date du jour, prochaine journée au campus (carte graphite :
+    séances, horaires, salle, formateur, « Dans N jours »), travail à rendre (en retard
+    d'abord, 3 max), dernière annonce (« Nouveau » si non lue), dernières notes (note
+    chiffrée et/ou résultat par compétence). Chaque carte sous son propre `<Suspense>`.
+    Compte sans promotion : message d'attente + annonces du CFA. Lectures dans
+    `src/lib/data/student.ts` ; règles pures et testées dans `src/lib/format.ts` (dates à
+    l'heure de Paris) et `src/lib/pedagogy.ts` (statut des devoirs, résultats).
+    Testé avec Inès (DWWM), Yanis (NTC) et Sam (sans promotion), sur mobile et ordinateur.
 - [ ] Étape 5 : finition et mise en ligne
