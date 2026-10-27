@@ -442,6 +442,13 @@ Si le travail est repris en cours de route :
      indispensable avant d'ouvrir l'inscription à de vrais apprentis.
   5. Désactiver un apprenti : `profiles.deactivated = true` (l'accès est coupé) ; pour
      bloquer aussi la connexion elle-même, le bannir dans Authentication > Users.
-- [ ] Étape 3 : coquille
+- [x] Étape 3 : coquille. Sidebar graphite (logotype blanc, sections du menu, entrée active
+  en lime, pastille des annonces non lues, profil et déconnexion en bas), en-tête (section,
+  promotion, raccourci Messages), tiroir mobile accessible (Échap, focus, défilement
+  bloqué), lien d'évitement. Composants `ui/` : PageHeader, EmptyState, StatusBadge,
+  SectionSkeleton, Avatar (initiales), ComingSoon. Pages vides des 7 sections avec
+  `loading.tsx`, `error.tsx` de l'espace, 404 aux couleurs MLK, état « en attente de
+  rattachement » pour un compte sans promotion. Menu défini dans `src/lib/nav.ts`.
+  Testé : ordinateur et mobile, comptes Inès et Sam, navigation, déconnexion par le menu.
 - [ ] Étape 4 : sections (4.1 → 4.8)
 - [ ] Étape 5 : finition et mise en ligne

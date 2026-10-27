@@ -13,6 +13,12 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
   .eyebrow .nr`, tokens Tailwind `iris`, `lilas`, `lime`, `graphite`, `porcelaine`…
   dans `src/app/globals.css`). Logomark et logotype : toujours les PNG de
   `public/images/` via `components/brand/`, jamais redessinés.
+- **CSS** : dans `globals.css`, les styles de base sont dans `@layer base` et les classes
+  de la charte dans `@layer components`. Ne rien ajouter hors couche : avec Tailwind 4,
+  une règle hors couche bat les utilitaires (`a { color: inherit }` hors couche rendait
+  `text-white` inopérant sur les liens).
+- **Coquille** : menu dans `src/lib/nav.ts` ; une nouvelle page de l'espace utilise
+  `PageHeader` (h1), `EmptyState` pour les listes vides et a son `loading.tsx`.
 - **Cache Components est activé** (`cacheComponents: true`, défaut de Next 16.4). Toute
   lecture de cookies / session / données par utilisateur doit être dans un composant
   enveloppé de `<Suspense>`, ou dans une route avec `loading.tsx`. Voir

@@ -43,6 +43,12 @@
   --font-display: var(--font-titles), "Fraunces", serif;
 }
 
+/*
+  Couches Tailwind 4 : les styles hors couche l'emportent sur les utilitaires. Les styles
+  de base et les classes de la charte sont donc rangés dans @layer base / components,
+  pour qu'une classe comme text-white puisse les surcharger.
+*/
+@layer base {
 * {
   box-sizing: border-box;
 }
@@ -65,7 +71,9 @@ a {
   outline: 2px solid #8d7cff;
   outline-offset: 2px;
 }
+}
 
+@layer components {
 /* Titres — New Spirit (Adobe Fonts) ; Fraunces en équivalent temporaire */
 .nr {
   font-family: var(--font-titles), "Fraunces", serif;
@@ -269,6 +277,20 @@ a {
 }
 .scrim {
   animation: fin 0.4s both;
+}
+
+/* Tiroir du menu mobile : entre par la gauche */
+@keyframes drawer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.drawer-in {
+  animation: drawer 0.32s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
 }
 
 /* Les personnes sensibles au mouvement ne voient ni translation ni zoom */
