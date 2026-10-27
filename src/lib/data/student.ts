@@ -419,6 +419,8 @@ export type AnnouncementPreview = {
   createdAt: string;
   targetUrl: string | null;
   ctaLabel: string | null;
+  /** Vrai pour une annonce à la promotion, faux pour une annonce à tout le CFA */
+  forPromotion: boolean;
 };
 
 /** Les annonces les plus récentes (de la promotion et de tout le CFA). */
@@ -426,7 +428,7 @@ export async function getLatestAnnouncements(limit: number): Promise<Announcemen
   const supabase = await studentClient();
   const { data, error } = await supabase
     .from("announcements")
-    .select("id, title, body, author_name, created_at, target_url, cta_label")
+    .select("id, title, body, author_name, created_at, target_url, cta_label, promotion_id")
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw new Error(`Chargement des annonces impossible : ${error.message}`);
@@ -439,6 +441,7 @@ export async function getLatestAnnouncements(limit: number): Promise<Announcemen
     createdAt: row.created_at,
     targetUrl: row.target_url,
     ctaLabel: row.cta_label,
+    forPromotion: row.promotion_id !== null,
   }));
 }
 
