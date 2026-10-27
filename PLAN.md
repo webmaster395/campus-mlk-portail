@@ -487,4 +487,6 @@ Si le travail est repris en cours de route :
   - [x] 4.8 Profil : informations (gérées par le CFA), photo (bucket privé `avatars`,
     affichée aussi dans le menu, URL signée 1 h), retrait de la photo, changement de mot
     de passe avec vérification du mot de passe actuel. Testé de bout en bout.
-- [ ] Étape 5 : finition et mise en ligne
+- [~] Étape 5 : finition faite (audit d'accessibilité scripté sur les 10 pages : un h1,
+  champs et boutons nommés, pas d'image sans alt ; `noindex` ; README). **Reste la mise en
+  ligne** : dépôt GitHub, Vercel, domaine, réglages Supabase listés à l'étape 2.
