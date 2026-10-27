@@ -409,10 +409,14 @@ Si le travail est repris en cours de route :
   isolement RLS vérifié (`supabase/tests/rls_isolation.sql`), advisors sécurité : aucune
   alerte. Types dans `src/lib/supabase/database.types.ts`. Les fonctions internes sont
   dans le schéma `private` (non exposé par l'API).
-  **Reste à faire par le CFA / le propriétaire du compte** : créer le compte étudiant de
-  démo puis lancer `supabase/demo-etudiant.sql` ; désactiver les inscriptions publiques et
-  régler les URL de redirection (Authentication) ; renseigner `SUPABASE_SERVICE_ROLE_KEY`
-  dans `.env.local`.
+  **Comptes de test** (`scripts/test-accounts.mjs`, domaine `portail-mlk.invalid`,
+  identifiants dans `supabase/comptes-test.local.json`, non versionné) : Inès (DWWM, avec
+  rendu et notes), Yanis (NTC), Léa (désactivée), Sam (sans promotion). Vérifier qu'ils
+  se connectent : `node scripts/test-accounts.mjs check`. Les effacer :
+  `supabase/comptes-test-suppression.sql`.
+  **Reste à faire par le propriétaire du compte Supabase** : désactiver les inscriptions
+  publiques et régler les URL de redirection (Authentication) ; renseigner
+  `SUPABASE_SERVICE_ROLE_KEY` dans `.env.local`.
 - [ ] Étape 2 : authentification
 - [ ] Étape 3 : coquille
 - [ ] Étape 4 : sections (4.1 → 4.8)

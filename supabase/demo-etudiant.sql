@@ -1,16 +1,17 @@
 -- Campus MLK Portail : rattache un compte étudiant de test à la promotion de démo (DWWM).
 --
--- 1. Créer le compte dans Supabase : Authentication > Users > Add user > Create new user
---    (cocher « Auto Confirm User »). Le profil est créé automatiquement par le trigger.
--- 2. Remplacer l'adresse ci-dessous par celle du compte, puis lancer ce script
---    (SQL Editor, ou connecteur MCP « execute_sql »). Il est rejouable.
+-- 1. Créer le compte : scripts/test-accounts.mjs (comptes de test) ou, dans Supabase,
+--    Authentication > Users > Add user > Create new user (cocher « Auto Confirm User »).
+--    Le profil est créé automatiquement par le trigger.
+-- 2. Adapter l'adresse ci-dessous si besoin, puis lancer ce script (SQL Editor, ou
+--    connecteur MCP « execute_sql »). Il est rejouable.
 --
 -- Effet : identité et entreprise de démo, promotion DWWM 2026-2027, un rendu déjà déposé,
 -- des notes sur les évaluations publiées (et une sur l'évaluation non publiée, qui doit
 -- rester invisible), et deux annonces non lues.
 
 with student as (
-  select id from public.profiles where email = 'etudiant.demo@mlk-campus.test'
+  select id from public.profiles where email = 'ines.martin@portail-mlk.invalid'
 ),
 profile as (
   update public.profiles p
