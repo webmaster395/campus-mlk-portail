@@ -1,0 +1,284 @@
+@import "tailwindcss";
+
+/*
+  Charte graphique MLK Campus, reprise du site vitrine (../Campus-MLK/app/globals.css).
+  Porcelaine #f9f9f9 · Graphite #1a1a1a · Iris #8d7cff (interactif)
+  Lilas #ba7eee (informatif) · Lime #d1ff5e (accents fond sombre)
+  Les classes .btnA, .btnO, .card, .fld… sont identiques au site ; les tokens @theme
+  ci-dessous les rendent aussi disponibles en utilitaires Tailwind (bg-iris, text-graphite…).
+*/
+
+:root {
+  --porcelaine: #f9f9f9;
+  --graphite: #1a1a1a;
+  --iris: #8d7cff;
+  --lilas: #ba7eee;
+  --lime: #d1ff5e;
+}
+
+@theme {
+  --color-porcelaine: #f9f9f9;
+  --color-graphite: #1a1a1a;
+  --color-iris: #8d7cff;
+  --color-lilas: #ba7eee;
+  --color-lime: #d1ff5e;
+  --color-lilas-pale: #f2e9fb;
+  --color-encre: #2b2b2b;
+  --color-texte: #3d3d3d;
+  --color-texte-doux: #6b6b6b;
+
+  /* Statuts : en retard, rendu / acquis, bientôt dû, information */
+  --color-alerte: #e84d72;
+  --color-succes: #4ec5a5;
+  --color-attente: #f4bf4c;
+  --color-info: #1b5cff;
+
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  --ease-mlk: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Police des titres en utilitaire (font-display) ; --font-titles vient de next/font */
+@theme inline {
+  --font-display: var(--font-titles), "Fraunces", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f9f9f9;
+  color: #1a1a1a;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Focus clavier visible partout, en Iris */
+:focus-visible {
+  outline: 2px solid #8d7cff;
+  outline-offset: 2px;
+}
+
+/* Titres — New Spirit (Adobe Fonts) ; Fraunces en équivalent temporaire */
+.nr {
+  font-family: var(--font-titles), "Fraunces", serif;
+  font-weight: 500;
+  font-variation-settings: "SOFT" 100, "WONK" 0;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ba7eee;
+}
+
+/* Boutons */
+.btnA {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 26px;
+  border-radius: 40px;
+  background: #1a1a1a;
+  color: #f9f9f9;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: background 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.btnA:hover {
+  background: #8d7cff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(141, 124, 255, 0.4);
+}
+.btnA:active {
+  transform: translateY(0) scale(0.98);
+}
+.btnO {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 15px 26px;
+  border-radius: 40px;
+  border: 1px solid rgba(22, 22, 22, 0.22);
+  background: transparent;
+  color: #1a1a1a;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    background 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.btnO:hover {
+  border-color: #8d7cff;
+  background: rgba(141, 124, 255, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -8px rgba(141, 124, 255, 0.3);
+}
+.btnO:active {
+  transform: translateY(0) scale(0.98);
+}
+.btnA:disabled,
+.btnO:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Flèche animée */
+.ar {
+  display: inline-block;
+  transition: transform 0.35s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.gobtn:hover .ar,
+.btnA:hover .ar,
+.btnO:hover .ar {
+  transform: translateX(6px);
+}
+
+/* Liens de navigation */
+.navl {
+  position: relative;
+  cursor: pointer;
+  color: #3d3d3d;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: color 0.3s;
+  background: none;
+  border: none;
+  font-family: inherit;
+  padding: 0;
+}
+.navl::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  height: 1.5px;
+  width: 0;
+  background: #1a1a1a;
+  transition: width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.navl:hover {
+  color: #8d7cff;
+}
+.navl:hover::after {
+  width: 100%;
+}
+.navl.on {
+  color: #8d7cff;
+}
+.navl.on::after {
+  width: 100%;
+}
+
+/* Formulaires */
+.fld {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid rgba(22, 22, 22, 0.18);
+  border-radius: 11px;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #1a1a1a;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.fld:focus {
+  outline: none;
+  border-color: #8d7cff;
+  box-shadow: 0 0 0 3px rgba(122, 92, 240, 0.12);
+}
+.lbl {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 7px;
+  color: #2b2b2b;
+}
+.req {
+  color: #a8472e;
+}
+.chk {
+  width: 18px;
+  height: 18px;
+  accent-color: #8d7cff;
+}
+
+/* Cartes */
+.card {
+  background: #ffffff;
+  border: 1px solid rgba(22, 22, 22, 0.12);
+  border-radius: 16px;
+}
+.lift {
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.45s,
+    border-color 0.45s;
+  cursor: pointer;
+}
+.lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px -22px rgba(20, 20, 20, 0.28);
+  border-color: rgba(122, 92, 240, 0.4);
+}
+
+/* Animations d'entrée de page */
+@keyframes fup {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.pg {
+  animation: fup 0.55s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pg2 {
+  animation: fup 0.7s 0.08s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.pg3 {
+  animation: fup 0.8s 0.16s both cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.scrim {
+  animation: fin 0.4s both;
+}
+
+/* Les personnes sensibles au mouvement ne voient ni translation ni zoom */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
