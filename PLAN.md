@@ -404,7 +404,15 @@ Si le travail est repris en cours de route :
 - [x] Étape 0 : socle. Next 16.4.3, React 19.3, Tailwind 4 via le loader Turbopack. **Cache
   Components et Partial Prefetching sont activés** (défauts de `create-next-app` 16.4) :
   les lectures de session doivent être sous `<Suspense>` (voir `CLAUDE.md`).
-- [ ] Étape 1 : Supabase
+- [x] Étape 1 : Supabase. Projet `campus-mlk-portail` (ref `xmxpgnxeehvkvnsvrynt`, eu-west-3,
+  offre gratuite). Migrations appliquées (schéma, RLS, storage), seed de démo chargé,
+  isolement RLS vérifié (`supabase/tests/rls_isolation.sql`), advisors sécurité : aucune
+  alerte. Types dans `src/lib/supabase/database.types.ts`. Les fonctions internes sont
+  dans le schéma `private` (non exposé par l'API).
+  **Reste à faire par le CFA / le propriétaire du compte** : créer le compte étudiant de
+  démo puis lancer `supabase/demo-etudiant.sql` ; désactiver les inscriptions publiques et
+  régler les URL de redirection (Authentication) ; renseigner `SUPABASE_SERVICE_ROLE_KEY`
+  dans `.env.local`.
 - [ ] Étape 2 : authentification
 - [ ] Étape 3 : coquille
 - [ ] Étape 4 : sections (4.1 → 4.8)

@@ -17,9 +17,13 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
   lecture de cookies / session / données par utilisateur doit être dans un composant
   enveloppé de `<Suspense>`, ou dans une route avec `loading.tsx`. Voir
   `node_modules/next/dist/docs/01-app/01-getting-started/08-caching.md`.
-- **Supabase** : la RLS protège toutes les données de l'espace étudiant. Jamais de clé
-  `service_role` dans le code de l'espace étudiant. Schéma versionné dans
-  `supabase/migrations/` uniquement.
+- **Supabase** (projet `xmxpgnxeehvkvnsvrynt`) : la RLS protège toutes les données de
+  l'espace étudiant. Jamais de clé `service_role` dans le code de l'espace étudiant.
+  Schéma versionné dans `supabase/migrations/` uniquement, nom de fichier = version
+  enregistrée par Supabase (`list_migrations`). Toute nouvelle table : RLS activée,
+  droits explicites (`grant select … to authenticated`, rien pour `anon`), puis
+  relancer les advisors, `supabase/tests/rls_isolation.sql` et régénérer
+  `src/lib/supabase/database.types.ts`. Fonctions internes dans le schéma `private`.
 - **Dates** : `timestamptz` en base, affichage en `fr-FR` et fuseau `Europe/Paris`.
 - Textes de l'interface et commentaires en français.
 
