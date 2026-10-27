@@ -1,5 +1,6 @@
 import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { addDays, isWithin } from "@/lib/calendar";
 import { parisDayKey } from "@/lib/format";
 import { assignmentStatus, compareTodo, type AssignmentStatus } from "@/lib/pedagogy";
 
@@ -28,13 +29,33 @@ export async function getNextCampusDay(now: Date): Promise<DashboardSession[]> {
   const supabase = await studentClient();
   const { data, error } = await supabase
     .from("sessions")
-    .select("id, title, kind, starts_at, ends_at, room, trainer_name, course:courses(title)")
+    .select(SESSION_FIELDS)
     .gte("ends_at", now.toISOString())
     .order("starts_at")
     .limit(12);
   if (error) throw new Error(`Chargement des séances impossible : ${error.message}`);
 
-  const sessions = (data ?? []).map((row) => ({
+  const sessions = (data ?? []).map(toSession);
+  if (!sessions.length) return [];
+  const day = parisDayKey(sessions[0].startsAt);
+  return sessions.filter((session) => parisDayKey(session.startsAt) === day);
+}
+
+const SESSION_FIELDS = "id, title, kind, starts_at, ends_at, room, trainer_name, course:courses(title)";
+
+type SessionRow = {
+  id: string;
+  title: string;
+  kind: string;
+  starts_at: string;
+  ends_at: string;
+  room: string | null;
+  trainer_name: string | null;
+  course: { title: string } | null;
+};
+
+function toSession(row: SessionRow): DashboardSession {
+  return {
     id: row.id,
     title: row.title,
     kind: row.kind,
@@ -43,10 +64,46 @@ export async function getNextCampusDay(now: Date): Promise<DashboardSession[]> {
     room: row.room,
     trainerName: row.trainer_name,
     courseTitle: row.course?.title ?? null,
-  }));
-  if (!sessions.length) return [];
-  const day = parisDayKey(sessions[0].startsAt);
-  return sessions.filter((session) => parisDayKey(session.startsAt) === day);
+  };
+}
+
+/**
+ * Les séances des jours [fromKey, toKey] (jours à Paris, bornes incluses). La requête prend
+ * une marge d'un jour de chaque côté en UTC, puis on garde les séances dont le jour à Paris
+ * tombe dans la plage : aucun calcul de fuseau dans la requête.
+ */
+export async function getSessionsBetween(fromKey: string, toKey: string): Promise<DashboardSession[]> {
+  const supabase = await studentClient();
+  const { data, error } = await supabase
+    .from("sessions")
+    .select(SESSION_FIELDS)
+    .gte("starts_at", `${addDays(fromKey, -1)}T00:00:00Z`)
+    .lt("starts_at", `${addDays(toKey, 2)}T00:00:00Z`)
+    .order("starts_at");
+  if (error) throw new Error(`Chargement du calendrier impossible : ${error.message}`);
+  return (data ?? [])
+    .map(toSession)
+    .filter((session) => isWithin(parisDayKey(session.startsAt), fromKey, toKey));
+}
+
+/** Toutes les séances de la promotion (export .ics). */
+export async function getAllSessions(): Promise<DashboardSession[]> {
+  const supabase = await studentClient();
+  const { data, error } = await supabase.from("sessions").select(SESSION_FIELDS).order("starts_at");
+  if (error) throw new Error(`Chargement des séances impossible : ${error.message}`);
+  return (data ?? []).map(toSession);
+}
+
+export type CompanyPeriod = { id: string; startsOn: string; endsOn: string; note: string | null };
+
+/** Les périodes en entreprise qui touchent les jours [fromKey, toKey] (toutes si sans bornes). */
+export async function getCompanyPeriods(fromKey?: string, toKey?: string): Promise<CompanyPeriod[]> {
+  const supabase = await studentClient();
+  let query = supabase.from("company_periods").select("id, starts_on, ends_on, note").order("starts_on");
+  if (fromKey && toKey) query = query.lte("starts_on", toKey).gte("ends_on", fromKey);
+  const { data, error } = await query;
+  if (error) throw new Error(`Chargement des périodes en entreprise impossible : ${error.message}`);
+  return (data ?? []).map((row) => ({ id: row.id, startsOn: row.starts_on, endsOn: row.ends_on, note: row.note }));
 }
 
 export type TodoAssignment = {

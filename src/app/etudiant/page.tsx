@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Hourglass } from "lucide-react";
 import AnnouncementCard from "@/components/dashboard/AnnouncementCard";
 import { CardSkeleton } from "@/components/dashboard/DashboardCard";
 import GradesCard from "@/components/dashboard/GradesCard";
 import NextDayCard from "@/components/dashboard/NextDayCard";
 import TodoCard from "@/components/dashboard/TodoCard";
-import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
+import PendingPromotion from "@/components/ui/PendingPromotion";
 import { getViewer } from "@/lib/data/viewer";
 import { formatLongDay } from "@/lib/format";
 
@@ -50,10 +49,7 @@ export default async function StudentHomePage() {
         </div>
       ) : (
         <div className="grid gap-5">
-          <EmptyState icon={Hourglass} title="Votre compte est en attente de rattachement">
-            L&apos;équipe de MLK Campus doit encore vous rattacher à votre promotion. Vos cours,
-            votre calendrier et vos ressources apparaîtront ici dès que ce sera fait.
-          </EmptyState>
+          <PendingPromotion />
           {/* Les annonces de tout le CFA restent visibles en attendant */}
           <Suspense fallback={<CardSkeleton />}>
             <AnnouncementCard now={now} seenAt={viewer.announcementsSeenAt} />

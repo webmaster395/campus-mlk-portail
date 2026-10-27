@@ -136,6 +136,37 @@ where not exists (
 );
 
 -- ---------------------------------------------------------------------------
+-- Périodes en entreprise (rythme de l'alternance)
+-- ---------------------------------------------------------------------------
+
+-- DWWM : mercredi → vendredi en entreprise, de 3 semaines avant à 5 semaines après.
+-- C'est aussi la façon de générer un rythme régulier pour une vraie promotion.
+with ref as (select date_trunc('week', now() at time zone 'Europe/Paris')::date as monday)
+insert into public.company_periods (promotion_id, starts_on, ends_on)
+select 'b0000000-0000-4000-8000-000000000001', ref.monday + w * 7 + 2, ref.monday + w * 7 + 4
+from ref, generate_series(-3, 5) as w
+where not exists (select 1 from public.company_periods where promotion_id = 'b0000000-0000-4000-8000-000000000001');
+
+-- NTC : lundi → mercredi et vendredi en entreprise (jeudi au campus)
+with ref as (select date_trunc('week', now() at time zone 'Europe/Paris')::date as monday)
+insert into public.company_periods (promotion_id, starts_on, ends_on)
+select 'b0000000-0000-4000-8000-000000000002', d.starts_on, d.ends_on
+from ref, generate_series(-1, 2) as w,
+  lateral (values (ref.monday + w * 7, ref.monday + w * 7 + 2), (ref.monday + w * 7 + 4, ref.monday + w * 7 + 4)) as d(starts_on, ends_on)
+where not exists (select 1 from public.company_periods where promotion_id = 'b0000000-0000-4000-8000-000000000002');
+
+-- DWWM, semaine +4 : semaine entière en entreprise (pas de séance au campus)
+update public.company_periods
+set starts_on = starts_on - 2, note = 'Semaine complète en entreprise'
+where promotion_id = 'b0000000-0000-4000-8000-000000000001'
+  and starts_on = (date_trunc('week', now() at time zone 'Europe/Paris')::date + 4 * 7 + 2);
+delete from public.sessions
+where promotion_id = 'b0000000-0000-4000-8000-000000000001'
+  and (starts_at at time zone 'Europe/Paris')::date
+      between date_trunc('week', now() at time zone 'Europe/Paris')::date + 28
+          and date_trunc('week', now() at time zone 'Europe/Paris')::date + 29;
+
+-- ---------------------------------------------------------------------------
 -- Ressources (liens externes ; les fichiers seront déposés par le CFA)
 -- ---------------------------------------------------------------------------
 

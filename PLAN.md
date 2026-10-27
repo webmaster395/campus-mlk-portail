@@ -383,8 +383,8 @@ de l'espace étudiant (seule la RLS protège les données), dates en `Europe/Par
 4. **Projet Supabase** : nouveau projet dédié (recommandé), créé par toi dans le tableau
    de bord, ou par moi via le connecteur Supabase. La création peut avoir un coût selon
    ton offre, je te le confirmerai avant. *(étape 1)*
-5. **Alternance** : faut-il afficher les périodes en entreprise dans le calendrier
-   (rythme école / entreprise) ? *(étape 4.2)*
+5. ~~**Alternance**~~ **Tranché** : oui, les périodes en entreprise sont affichées
+   (table `company_periods`, saisie par le CFA en plages de dates).
 6. **Hébergement et domaine** : Vercel et `portail.mlkcampus.fr` ? *(étape 5)*
 7. **Dépôt git distant** : GitHub (quel compte ou organisation) ? *(étape 0)*
 
@@ -442,6 +442,9 @@ Si le travail est repris en cours de route :
      indispensable avant d'ouvrir l'inscription à de vrais apprentis.
   5. Désactiver un apprenti : `profiles.deactivated = true` (l'accès est coupé) ; pour
      bloquer aussi la connexion elle-même, le bannir dans Authentication > Users.
+  6. *Attack Protection* : activer « Leaked password protection » (refuse les mots de
+     passe connus des fuites, via HaveIBeenPwned), signalé par l'advisor sécurité
+     maintenant que l'inscription est ouverte. Disponible à partir de l'offre Pro.
 - [x] Étape 3 : coquille. Sidebar graphite (logotype blanc, sections du menu, entrée active
   en lime, pastille des annonces non lues, profil et déconnexion en bas), en-tête (section,
   promotion, raccourci Messages), tiroir mobile accessible (Échap, focus, défilement
@@ -459,4 +462,13 @@ Si le travail est repris en cours de route :
     `src/lib/data/student.ts` ; règles pures et testées dans `src/lib/format.ts` (dates à
     l'heure de Paris) et `src/lib/pedagogy.ts` (statut des devoirs, résultats).
     Testé avec Inès (DWWM), Yanis (NTC) et Sam (sans promotion), sur mobile et ordinateur.
+  - [x] 4.2 Calendrier : vue semaine (colonnes sur ordinateur, liste sur téléphone qui
+    amène la journée du jour à l'écran) et vue mois (cases teintées les jours en
+    entreprise, séances écrites ou pastilles sur téléphone, clic = semaine du jour).
+    Navigation par l'adresse (`?vue=mois&date=AAAA-MM-JJ`), légende, export
+    `/etudiant/calendrier/ics` (séances + périodes en entreprise sur la journée).
+    **Périodes en entreprise** : nouvelle table `company_periods` (plages de dates par
+    promotion, précision facultative), migration `company_periods`, RLS vérifiée ;
+    un rythme régulier se génère en une requête (voir `seed.sql`). Calculs de jours
+    dans `src/lib/calendar.ts`, fichier iCalendar dans `src/lib/ics.ts`, avec tests.
 - [ ] Étape 5 : finition et mise en ligne

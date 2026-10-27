@@ -106,6 +106,41 @@ export type Database = {
           },
         ]
       }
+      company_periods: {
+        Row: {
+          created_at: string
+          ends_on: string
+          id: string
+          note: string | null
+          promotion_id: string
+          starts_on: string
+        }
+        Insert: {
+          created_at?: string
+          ends_on: string
+          id?: string
+          note?: string | null
+          promotion_id: string
+          starts_on: string
+        }
+        Update: {
+          created_at?: string
+          ends_on?: string
+          id?: string
+          note?: string | null
+          promotion_id?: string
+          starts_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_periods_promotion_id_fkey"
+            columns: ["promotion_id"]
+            isOneToOne: false
+            referencedRelation: "promotions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           competency_block: string | null

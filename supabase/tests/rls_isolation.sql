@@ -6,10 +6,10 @@
 -- (comptes fictifs, notes, rendus). Rien ne reste en base.
 --
 -- Résultat attendu (seed de démo) :
---   A_dwwm      : formations 1, promotions 1, profiles 1, courses 4, sessions 37, materials 5,
---                 assignments 3, evaluations 2, grades 2, announcements 3
+--   A_dwwm      : formations 1, promotions 1, profiles 1, courses 4, sessions 33, materials 5,
+--                 assignments 3, evaluations 2, grades 2, announcements 3, company_periods 9
 --   B_ntc       : formations 1, promotions 1, profiles 1, courses 1, sessions 1, materials 1,
---                 assignments 1, evaluations 0, grades 0, announcements 2
+--                 assignments 1, evaluations 0, grades 0, announcements 2, company_periods 8
 --   C_desactive : tout à 0 sauf profiles 1
 --   trigger_profils : promotion lue des métadonnées d'application pour A et B, « null » pour C
 --                     (promotion choisie par lui-même dans ses métadonnées utilisateur : ignorée)
@@ -69,6 +69,7 @@ begin
       'evaluations', (select count(*) from public.evaluations),
       'grades', (select count(*) from public.grades),
       'announcements', (select count(*) from public.announcements),
+      'company_periods', (select count(*) from public.company_periods),
       'viewer_formation', (select public.student_viewer_context() #>> '{formation,title}')
     ));
   end loop;
