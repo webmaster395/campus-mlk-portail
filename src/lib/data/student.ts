@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { addDays, isWithin } from "@/lib/calendar";
 import { parisDayKey } from "@/lib/format";
 import { assignmentStatus, compareTodo, type AssignmentStatus } from "@/lib/pedagogy";
+import { displayFileName } from "@/lib/validate";
 
 // Lectures de l'espace étudiant. Toutes passent par le client de la personne connectée :
 // la RLS limite déjà les résultats à sa promotion, rien n'est filtré « à la main » ici.
@@ -271,6 +272,21 @@ export async function getAssignments(now: Date, courseId?: string): Promise<Assi
       status: assignmentStatus(row.due_at, submission?.submitted_at ?? null, now),
     };
   });
+}
+
+/** URL signée (60 s) du fichier rendu par la personne connectée pour ce devoir. */
+export async function getSubmissionFileUrl(assignmentId: string): Promise<string | null> {
+  const supabase = await studentClient();
+  const { data } = await supabase
+    .from("submissions")
+    .select("file_path")
+    .eq("assignment_id", assignmentId)
+    .maybeSingle();
+  if (!data?.file_path) return null;
+  const { data: signed } = await supabase.storage
+    .from("submissions")
+    .createSignedUrl(data.file_path, 60, { download: displayFileName(data.file_path) });
+  return signed?.signedUrl ?? null;
 }
 
 export type CourseDetail = {

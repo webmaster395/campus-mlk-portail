@@ -30,6 +30,13 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
 - **Auth** : connexion et déconnexion par actions serveur ; les liens d'e-mail arrivent sur
   `/auth/reinitialiser` (invitation, oubli) ou `/auth/confirm`, et le jeton n'est consommé
   qu'au clic. Toute redirection après un lien passe par `safeNextPath()`.
+- **Fichiers déposés** (rendus, photo) : envoyés directement du navigateur vers Supabase
+  Storage (la RLS des buckets contrôle le dossier), puis une action serveur enregistre le
+  chemin après vérification. Jamais de fichier dans le corps d'une action serveur (limite
+  1 Mo, et 4,5 Mo sur Vercel). Les fichiers ne sortent que par des URL signées de 60 s.
+- **Serveur de dev** : si un route handler signale « X is not a function » juste après
+  l'ajout d'un export dans un module qu'il importe, c'est le cache de Turbopack :
+  redémarrer `npm run dev`.
 - **Comptes de test** : `node scripts/test-accounts.mjs check` (identifiants dans
   `supabase/comptes-test.local.json`, jamais dans le chat ni dans git).
 - **Supabase** (projet `xmxpgnxeehvkvnsvrynt`) : la RLS protège toutes les données de

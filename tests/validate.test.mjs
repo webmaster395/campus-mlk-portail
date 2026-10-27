@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { displayFileName, formatFileSize, isUuid, safeFileName } from "../src/lib/validate.ts";
+import { displayFileName, formatFileSize, isUuid, safeFileName, submissionFileError } from "../src/lib/validate.ts";
+
+test("fichiers de rendu : formats et taille du bucket", () => {
+  assert.equal(submissionFileError("maquette.zip", 1024), null);
+  assert.equal(submissionFileError("Rapport.PDF", 1024), null);
+  assert.match(submissionFileError("virus.exe", 1024), /n'est pas accepté/);
+  assert.match(submissionFileError("sans-extension", 1024), /n'est pas accepté/);
+  assert.match(submissionFileError("gros.pdf", 21 * 1024 * 1024), /dépasse 20 Mo/);
+  assert.match(submissionFileError("vide.pdf", 0), /vide/);
+});
 
 test("seuls les UUID passent", () => {
   assert.equal(isUuid("c0000000-0000-4000-8000-000000000001"), true);

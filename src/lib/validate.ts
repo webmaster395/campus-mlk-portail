@@ -27,6 +27,28 @@ export function safeFileName(rawName: string): string {
   return extension ? `${slug}.${extension}` : slug;
 }
 
+/** Rendus : mêmes limites que le bucket « submissions » (migration storage). */
+export const SUBMISSION_MAX_BYTES = 20 * 1024 * 1024;
+export const SUBMISSION_EXTENSIONS = [
+  "pdf", "zip", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt", "ods", "odp", "txt", "jpg", "jpeg", "png", "webp",
+];
+export const SUBMISSION_ACCEPT = SUBMISSION_EXTENSIONS.map((extension) => `.${extension}`).join(",");
+
+/** Photo de profil : mêmes limites que le bucket « avatars ». */
+export const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
+export const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+/** Message d'erreur si le fichier ne peut pas être déposé comme rendu, sinon null. */
+export function submissionFileError(name: string, size: number): string | null {
+  const extension = name.split(".").at(-1)?.toLowerCase() ?? "";
+  if (!SUBMISSION_EXTENSIONS.includes(extension)) {
+    return "Ce type de fichier n'est pas accepté. Formats possibles : PDF, ZIP, Word, Excel, PowerPoint, OpenDocument, texte ou image.";
+  }
+  if (size > SUBMISSION_MAX_BYTES) return "Ce fichier dépasse 20 Mo. Compressez-le ou déposez une archive plus légère.";
+  if (size === 0) return "Ce fichier est vide.";
+  return null;
+}
+
 /** Taille lisible : « 1,2 Mo », « 340 Ko ». */
 export function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} Ko`;
