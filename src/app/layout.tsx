@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
+import ThemeSync from "@/components/shell/ThemeSync";
 import "./globals.css";
 
 /*
@@ -29,11 +30,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Thème clair / sombre posé avant l'affichage (pas d'éclair blanc) : choix gardé, sinon thème du système */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("portail-theme");var d=t?t==="sombre":matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.dataset.theme=d?"dark":"light"}catch(e){}`,
+            __html: `try{var t=localStorage.getItem("portail-theme");var d=location.pathname.indexOf("/etudiant")===0&&(t?t==="sombre":matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.dataset.theme=d?"dark":"light"}catch(e){}`,
           }}
         />
       </head>
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <ThemeSync />
+        {children}
+      </body>
     </html>
   );
 }
