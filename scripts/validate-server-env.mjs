@@ -5,10 +5,11 @@ const productionBuild =
 
 if (!productionBuild) process.exit(0);
 
+// SUPABASE_SERVICE_ROLE_KEY n'est pas exigée : le code de l'espace étudiant ne s'en sert pas
+// (à ajouter ici quand une tâche d'administration côté serveur en aura besoin).
 const required = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "SUPABASE_SERVICE_ROLE_KEY",
   "NEXT_PUBLIC_SITE_URL",
 ];
 const missing = required.filter((name) => !process.env[name]?.trim());
