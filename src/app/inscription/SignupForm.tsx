@@ -41,22 +41,19 @@ export default function SignupForm() {
 
       <fieldset className="m-0 border-0 p-0">
         <legend className="lbl">Civilité</legend>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-wrap gap-x-8 gap-y-2">
           {[
-            ["madame", "Madame"],
             ["monsieur", "Monsieur"],
+            ["madame", "Madame"],
           ].map(([value, label]) => (
-            <label
-              key={value}
-              className="flex cursor-pointer items-center gap-2.5 rounded-[11px] border border-black/[0.18] bg-white px-4 py-2.5 text-[14px] font-medium has-[:checked]:border-iris has-[:checked]:bg-lilas-pale has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-iris"
-            >
+            <label key={value} className="flex cursor-pointer items-center gap-2.5 text-[16px]">
               <input
                 type="radio"
                 name="gender"
                 value={value}
                 required
                 defaultChecked={state.values.gender === value}
-                className="chk !h-4 !w-4"
+                className="chk"
               />
               {label}
             </label>
