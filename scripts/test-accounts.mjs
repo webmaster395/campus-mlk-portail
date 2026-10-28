@@ -17,13 +17,13 @@ import { randomBytes, randomUUID } from "node:crypto";
 const CREDENTIALS = new URL("../supabase/comptes-test.local.json", import.meta.url);
 export const TEST_EMAIL_DOMAIN = "portail-mlk.invalid";
 
-const PROMO_DWWM = "b0000000-0000-4000-8000-000000000001";
-const PROMO_NTC = "b0000000-0000-4000-8000-000000000002";
+const PROMO_MONTEUR = "b0000000-0000-4000-8000-000000000001";
+const PROMO_CUISINE = "b0000000-0000-4000-8000-000000000002";
 
 const ACCOUNTS = [
-  { key: "dwwm", email: `ines.martin@${TEST_EMAIL_DOMAIN}`, first_name: "Inès", last_name: "Martin", promotion_id: PROMO_DWWM, note: "Promotion DWWM, avec rendu et notes de démo" },
-  { key: "ntc", email: `yanis.diallo@${TEST_EMAIL_DOMAIN}`, first_name: "Yanis", last_name: "Diallo", promotion_id: PROMO_NTC, note: "Promotion NTC : ne doit rien voir de la DWWM" },
-  { key: "desactive", email: `lea.roux@${TEST_EMAIL_DOMAIN}`, first_name: "Léa", last_name: "Roux", promotion_id: PROMO_DWWM, deactivated: true, note: "Compte désactivé : redirigé vers /auth/desactive" },
+  { key: "monteur", email: `ines.martin@${TEST_EMAIL_DOMAIN}`, first_name: "Inès", last_name: "Martin", promotion_id: PROMO_MONTEUR, note: "Promotion Monteur audiovisuel, avec rendu et notes de démo" },
+  { key: "cuisine", email: `yanis.diallo@${TEST_EMAIL_DOMAIN}`, first_name: "Yanis", last_name: "Diallo", promotion_id: PROMO_CUISINE, note: "Promotion Commis de cuisine : ne voit rien de la filière audiovisuelle" },
+  { key: "desactive", email: `lea.roux@${TEST_EMAIL_DOMAIN}`, first_name: "Léa", last_name: "Roux", promotion_id: PROMO_MONTEUR, deactivated: true, note: "Compte désactivé : redirigé vers /auth/desactive" },
   { key: "sans-promo", email: `nouvel.apprenti@${TEST_EMAIL_DOMAIN}`, first_name: "Sam", last_name: "Nouveau", promotion_id: null, note: "Aucune promotion : états vides" },
 ];
 
