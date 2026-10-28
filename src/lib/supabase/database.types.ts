@@ -189,6 +189,7 @@ export type Database = {
           created_at: string
           held_on: string
           id: string
+          kind: string
           max_score: number
           promotion_id: string
           published: boolean
@@ -200,6 +201,7 @@ export type Database = {
           created_at?: string
           held_on: string
           id?: string
+          kind?: string
           max_score?: number
           promotion_id: string
           published?: boolean
@@ -211,6 +213,7 @@ export type Database = {
           created_at?: string
           held_on?: string
           id?: string
+          kind?: string
           max_score?: number
           promotion_id?: string
           published?: boolean

@@ -524,3 +524,5 @@ Si le travail est repris en cours de route :
   prochaine)** : calendrier et planning de cours, saisie du nom du cours, ajout de supports et
   de devoirs, évaluations (choisir l'étudiant et le cours, note, coefficient, type : partiel,
   devoir maison…). Facturation : probablement hors périmètre, en discussion avec la direction.
+- [x] Type d'évaluation : colonne `evaluations.kind` (partiel, devoir_sur_table, devoir_maison, ecf,
+  oral, projet, autre), migration `20261028212856_type_evaluation`, pastille sur la page Notes.

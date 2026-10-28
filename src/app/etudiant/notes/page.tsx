@@ -8,7 +8,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { getGradeReport } from "@/lib/data/student";
 import { getViewer } from "@/lib/data/viewer";
 import { formatNumber, formatShortDay } from "@/lib/format";
-import { competencyResult, weightedAverage } from "@/lib/pedagogy";
+import { competencyResult, evaluationKindLabel, weightedAverage } from "@/lib/pedagogy";
 
 export const metadata: Metadata = { title: "Notes" };
 
@@ -91,10 +91,18 @@ export default async function GradesPage() {
                   <ul className="m-0 list-none divide-y divide-black/[0.07] p-0">
                     {course.evaluations.map((evaluation) => {
                       const result = competencyResult(evaluation.result);
+                      const kind = evaluationKindLabel(evaluation.kind);
                       return (
                         <li key={evaluation.id} className="flex flex-col gap-2 px-5 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
                           <div className="min-w-0">
-                            <p className="m-0 text-[15px] font-semibold">{evaluation.title}</p>
+                            <p className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-[15px] font-semibold">
+                              {evaluation.title}
+                              {kind && (
+                                <span className="rounded-full bg-lilas-pale px-2.5 py-0.5 text-[11.5px] font-bold text-iris">
+                                  {kind}
+                                </span>
+                              )}
+                            </p>
                             <p className="mt-0.5 mb-0 text-[13px] text-texte-doux">
                               {formatShortDay(`${evaluation.heldOn}T12:00:00Z`)} · coefficient {formatNumber(evaluation.coefficient)}
                             </p>

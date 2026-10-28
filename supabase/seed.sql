@@ -228,21 +228,21 @@ on conflict (id) do update set
 with ref as (
   select (date_trunc('week', now() at time zone 'Europe/Paris'))::date as monday
 )
-insert into public.evaluations (id, course_id, promotion_id, title, held_on, max_score, coefficient, published)
+insert into public.evaluations (id, course_id, promotion_id, title, held_on, max_score, coefficient, published, kind)
 select * from (
   select 'e0000000-0000-4000-8000-000000000001'::uuid, 'c0000000-0000-4000-8000-000000000001'::uuid,
     'b0000000-0000-4000-8000-000000000001'::uuid, 'Épreuve pratique : Montage d''une bande-annonce',
-    ref.monday - 14, 20::numeric, 2::numeric, true
+    ref.monday - 14, 20::numeric, 2::numeric, true, 'ecf'
   from ref
   union all
   select 'e0000000-0000-4000-8000-000000000002', 'c0000000-0000-4000-8000-000000000003',
     'b0000000-0000-4000-8000-000000000001', 'Étalonnage colorimétrique et conformité broadcast',
-    ref.monday - 7, 20::numeric, 1::numeric, true
+    ref.monday - 7, 20::numeric, 1::numeric, true, 'devoir_sur_table'
   from ref
   union all
   select 'e0000000-0000-4000-8000-000000000003', 'c0000000-0000-4000-8000-000000000002',
     'b0000000-0000-4000-8000-000000000001', 'Analyse filmique et intentions de montage',
-    ref.monday - 1, 20::numeric, 1::numeric, false
+    ref.monday - 1, 20::numeric, 1::numeric, false, 'partiel'
   from ref
 ) as seed_evaluations
 on conflict (id) do update set
@@ -252,7 +252,8 @@ on conflict (id) do update set
   held_on = excluded.held_on,
   max_score = excluded.max_score,
   coefficient = excluded.coefficient,
-  published = excluded.published;
+  published = excluded.published,
+  kind = excluded.kind;
 
 -- ---------------------------------------------------------------------------
 -- 8. Annonces générales et pédagogiques
