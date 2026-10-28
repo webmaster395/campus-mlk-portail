@@ -5,6 +5,12 @@
 Espace connecté des apprentis de MLK Campus (CFA à Créteil). La feuille de route, le
 schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant toute tâche.
 
+## Branches
+
+**Ne jamais travailler sur `main` (= production).** Toutes les modifications se commitent et se
+poussent sur la branche **`preview`** ; la fusion dans `main` se fait uniquement à la demande du
+propriétaire. Détails dans `PLAN.md`, section « Branches et déploiement ».
+
 ## Règles du projet
 
 - **Phase 1 = espace étudiant uniquement.** Un seul rôle (`student`), pas d'espace
