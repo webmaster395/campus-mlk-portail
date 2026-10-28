@@ -7,9 +7,7 @@ import Logotype from "@/components/brand/Logotype";
 import NavLinks from "./NavLinks";
 
 /**
- * Menu du téléphone : un bouton de l'en-tête ouvre un tiroir reprenant le menu de
- * l'ordinateur (masqué à partir de md). Échap ou un clic à côté le referment, le focus
- * entre dans le tiroir puis revient au bouton, et la page ne défile plus derrière.
+ * Menu du téléphone : tiroir latéral reprenant le cartouche graphite en haut et le corps clair.
  */
 export default function MobileNav({
   unread,
@@ -23,8 +21,6 @@ export default function MobileNav({
   const panel = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
 
-  // Refermer dès que la page change (y compris le bouton « retour » du téléphone),
-  // pendant le rendu pour ne pas afficher le tiroir un instant sur la nouvelle page
   const [shownFor, setShownFor] = useState(pathname);
   if (shownFor !== pathname) {
     setShownFor(pathname);
@@ -85,23 +81,24 @@ export default function MobileNav({
             aria-modal="true"
             aria-label="Menu"
             tabIndex={-1}
-            className="drawer-in relative flex h-full w-[296px] max-w-[86vw] flex-col overflow-y-auto overscroll-contain bg-graphite shadow-[0_0_40px_rgba(0,0,0,0.3)] outline-none"
+            className="drawer-in relative flex h-full w-[260px] max-w-[82vw] flex-col overflow-y-auto overscroll-contain bg-white shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
           >
-            <div className="flex items-center justify-between px-5 pt-5 pb-7">
-              <Logotype variant="blanc" height={32} />
+            {/* Bandeau du logo teinté selon la filière */}
+            <div className="flex h-20 shrink-0 items-center justify-between bg-band px-4">
+              <Logotype variant="blanc" height={54} />
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Fermer le menu"
-                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border-none bg-transparent text-white/80 transition-colors hover:bg-white/10"
+                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg border-none bg-transparent text-white/80 transition-colors hover:bg-white/10"
               >
-                <X size={22} strokeWidth={1.8} aria-hidden />
+                <X size={20} strokeWidth={1.8} aria-hidden />
               </button>
             </div>
-            <nav aria-label="Menu principal" className="flex-1 px-3 pb-6">
+            <nav aria-label="Menu principal" className="flex-1 px-2.5 py-4">
               <NavLinks unread={unread} />
             </nav>
-            <div className="border-t border-white/10 px-3 py-3">{footer}</div>
+            <div className="border-t border-black/[0.08] px-2.5 py-2.5">{footer}</div>
           </div>
         </div>
       )}

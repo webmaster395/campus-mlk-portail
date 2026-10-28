@@ -22,7 +22,10 @@ export type DashboardSession = {
   endsAt: string;
   room: string | null;
   trainerName: string | null;
+  description: string;
+  courseId: string | null;
   courseTitle: string | null;
+  competencyBlock: string | null;
 };
 
 /** Les séances de la prochaine journée au campus (aujourd'hui si une séance n'est pas finie). */
@@ -42,7 +45,8 @@ export async function getNextCampusDay(now: Date): Promise<DashboardSession[]> {
   return sessions.filter((session) => parisDayKey(session.startsAt) === day);
 }
 
-const SESSION_FIELDS = "id, title, kind, starts_at, ends_at, room, trainer_name, course:courses(title)";
+const SESSION_FIELDS =
+  "id, title, kind, starts_at, ends_at, room, trainer_name, description, course:courses(id, title, competency_block)";
 
 type SessionRow = {
   id: string;
@@ -52,7 +56,8 @@ type SessionRow = {
   ends_at: string;
   room: string | null;
   trainer_name: string | null;
-  course: { title: string } | null;
+  description: string;
+  course: { id: string; title: string; competency_block: string | null } | null;
 };
 
 function toSession(row: SessionRow): DashboardSession {
@@ -64,7 +69,10 @@ function toSession(row: SessionRow): DashboardSession {
     endsAt: row.ends_at,
     room: row.room,
     trainerName: row.trainer_name,
+    description: row.description,
+    courseId: row.course?.id ?? null,
     courseTitle: row.course?.title ?? null,
+    competencyBlock: row.course?.competency_block ?? null,
   };
 }
 
@@ -385,6 +393,7 @@ export type TodoAssignment = {
   id: string;
   title: string;
   dueAt: string;
+  requiresFile: boolean;
   courseTitle: string | null;
   status: AssignmentStatus;
 };
@@ -394,7 +403,7 @@ export async function getTodoAssignments(now: Date): Promise<TodoAssignment[]> {
   const supabase = await studentClient();
   const { data, error } = await supabase
     .from("assignments")
-    .select("id, title, due_at, course:courses(title), submissions(submitted_at)")
+    .select("id, title, due_at, requires_file, course:courses(title), submissions(submitted_at)")
     .order("due_at");
   if (error) throw new Error(`Chargement du travail à rendre impossible : ${error.message}`);
 
@@ -403,6 +412,7 @@ export async function getTodoAssignments(now: Date): Promise<TodoAssignment[]> {
       id: row.id,
       title: row.title,
       dueAt: row.due_at,
+      requiresFile: row.requires_file,
       courseTitle: row.course?.title ?? null,
       // La RLS ne renvoie que le rendu de la personne connectée
       status: assignmentStatus(row.due_at, row.submissions[0]?.submitted_at ?? null, now),
@@ -451,6 +461,7 @@ export type GradePreview = {
   result: string | null;
   evaluationTitle: string;
   maxScore: number;
+  coefficient: number;
   heldOn: string;
   courseTitle: string | null;
 };
@@ -460,7 +471,7 @@ export async function getLatestGrades(limit: number): Promise<GradePreview[]> {
   const supabase = await studentClient();
   const { data, error } = await supabase
     .from("grades")
-    .select("id, score, result, created_at, evaluation:evaluations(title, held_on, max_score, course:courses(title))")
+    .select("id, score, result, created_at, evaluation:evaluations(title, held_on, max_score, coefficient, course:courses(title))")
     .order("created_at", { ascending: false })
     .limit(limit);
   if (error) throw new Error(`Chargement des notes impossible : ${error.message}`);
@@ -474,6 +485,7 @@ export async function getLatestGrades(limit: number): Promise<GradePreview[]> {
             result: row.result,
             evaluationTitle: row.evaluation.title,
             maxScore: row.evaluation.max_score,
+            coefficient: row.evaluation.coefficient,
             heldOn: row.evaluation.held_on,
             courseTitle: row.evaluation.course?.title ?? null,
           },

@@ -23,6 +23,8 @@
   --color-lilas: #ba7eee;
   --color-lime: #d1ff5e;
   --color-lilas-pale: #f2e9fb;
+  /* Bandeau du logo : graphite par défaut, teinte de la filière dans l'espace étudiant */
+  --color-band: #1a1a1a;
   --color-encre: #2b2b2b;
   --color-texte: #3d3d3d;
   --color-texte-doux: #6b6b6b;

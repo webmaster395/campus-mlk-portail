@@ -1,7 +1,7 @@
 import {
   BookOpen,
   CalendarDays,
-  ClipboardList,
+  FileText,
   FolderOpen,
   GraduationCap,
   House,
@@ -19,6 +19,9 @@ export type NavItem = {
 
 export type NavSection = { title: string; items: NavItem[] };
 
+/** Cookie du menu latéral replié (« 1 ») ou déplié, lu par la coquille côté serveur. */
+export const SIDEBAR_COOKIE = "portail-menu-replie";
+
 /** Le menu de l'espace étudiant (sidebar sur ordinateur, tiroir sur téléphone). */
 export const STUDENT_NAV: NavSection[] = [
   {
@@ -33,7 +36,7 @@ export const STUDENT_NAV: NavSection[] = [
     items: [
       { label: "Cours", href: "/etudiant/cours", icon: BookOpen },
       { label: "Ressources", href: "/etudiant/ressources", icon: FolderOpen },
-      { label: "Travail à rendre", href: "/etudiant/travail", icon: ClipboardList },
+      { label: "Travail à rendre", href: "/etudiant/travail", icon: FileText },
       { label: "Notes", href: "/etudiant/notes", icon: GraduationCap },
     ],
   },

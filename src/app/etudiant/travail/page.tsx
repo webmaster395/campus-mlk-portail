@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ClipboardList } from "lucide-react";
+import { AlertCircle, CheckCircle2, ClipboardList, Clock } from "lucide-react";
 import AssignmentCard from "@/components/assignment/AssignmentCard";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
@@ -11,9 +11,9 @@ import { getViewer } from "@/lib/data/viewer";
 export const metadata: Metadata = { title: "Travail à rendre" };
 
 const TABS = [
-  { key: "a-faire", label: "À faire", empty: "Rien à faire pour le moment. Bravo !" },
-  { key: "en-retard", label: "En retard", empty: "Aucun travail en retard." },
-  { key: "rendus", label: "Rendus", empty: "Vous n'avez encore rien rendu." },
+  { key: "a-faire", label: "À faire", icon: Clock, empty: "Rien à faire pour le moment. Bravo !" },
+  { key: "en-retard", label: "En retard", icon: AlertCircle, empty: "Aucun travail en retard." },
+  { key: "rendus", label: "Rendus", icon: CheckCircle2, empty: "Vous n'avez encore rien rendu." },
 ] as const;
 type TabKey = (typeof TABS)[number]["key"];
 
@@ -67,6 +67,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/etud
             {TABS.map((option) => {
               const count = assignments.filter((a) => tabOf(a) === option.key).length;
               const active = option.key === tab;
+              const Icon = option.icon;
               return (
                 <Link
                   key={option.key}
@@ -76,6 +77,7 @@ export default async function AssignmentsPage({ searchParams }: PageProps<"/etud
                     active ? "border-graphite bg-graphite text-white" : "border-black/15 bg-white text-texte hover:border-iris hover:text-iris"
                   }`}
                 >
+                  <Icon size={16} strokeWidth={1.9} aria-hidden className={active ? "text-lime" : "text-texte-doux"} />
                   {option.label}
                   <span
                     className={`rounded-full px-2 text-[12px] ${
