@@ -1,5 +1,6 @@
 import { ExternalLink, FileText, Link2 } from "lucide-react";
 import type { MaterialItem } from "@/lib/data/student";
+import { formatShortDay } from "@/lib/format";
 
 /**
  * Liste de ressources. Chaque lien passe par /etudiant/ressources/[id]/ouvrir, qui vérifie
@@ -22,7 +23,7 @@ export default function MaterialList({
               href={`/etudiant/ressources/${material.id}/ouvrir`}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-3 rounded-xl border border-black/[0.08] bg-white px-4 py-3 transition-colors hover:border-iris/50 hover:bg-lilas-pale/40"
+              className="group flex items-center gap-3 rounded-2xl border border-black/[0.08] bg-white px-4 py-3 transition-colors hover:border-iris/50 hover:bg-lilas-pale/40"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-lilas-pale text-iris">
                 <Icon size={17} strokeWidth={1.8} aria-hidden />
@@ -31,7 +32,7 @@ export default function MaterialList({
                 <span className="block text-[14.5px] font-semibold leading-snug">{material.title}</span>
                 <span className="block truncate text-[12.5px] text-texte-doux">
                   {showCourse && material.courseTitle && `${material.courseTitle} · `}
-                  {material.isFile ? "Document" : material.linkHost ?? "Lien"}
+                  {material.isFile ? "Document" : material.linkHost ?? "Lien"} · ajouté le {formatShortDay(material.createdAt)}
                 </span>
               </span>
               <ExternalLink size={16} aria-hidden className="shrink-0 text-texte-doux transition-colors group-hover:text-iris" />

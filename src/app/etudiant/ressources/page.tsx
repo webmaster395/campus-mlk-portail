@@ -9,7 +9,7 @@ import PendingPromotion from "@/components/ui/PendingPromotion";
 import { getMaterials, type MaterialItem } from "@/lib/data/student";
 import { getViewer } from "@/lib/data/viewer";
 
-export const metadata: Metadata = { title: "Ressources" };
+export const metadata: Metadata = { title: "Mes ressources" };
 
 function first(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
@@ -21,7 +21,7 @@ export default async function ResourcesPage({ searchParams }: PageProps<"/etudia
   if (!viewer) return null;
 
   const header = (
-    <PageHeader eyebrow={viewer.formation?.title ?? "Espace apprentis"} title="Ressources">
+    <PageHeader eyebrow={viewer.formation?.title ?? "Espace apprentis"} title="Mes ressources">
       Supports de cours, documents et liens utiles partagés par vos formateurs.
     </PageHeader>
   );
@@ -83,15 +83,20 @@ export default async function ResourcesPage({ searchParams }: PageProps<"/etudia
             ))}
           </nav>
 
-          <div className="pg3 flex flex-col gap-8">
+          <div className="pg3 flex flex-col gap-6">
             {shown.map(([id, group]) => (
-              <section key={id} aria-labelledby={`module-${id}`}>
-                <h2 id={`module-${id}`} className="mt-0 mb-3 flex items-baseline justify-between gap-3 text-[17px] font-semibold">
-                  {group.title}
+              <section key={id} aria-labelledby={`module-${id}`} className="card p-5 sm:p-6">
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                  <h2 id={`module-${id}`} className="nr m-0 flex items-center gap-3 text-[22px] leading-tight">
+                    {group.title}
+                    <span className="rounded-full bg-lime px-2.5 py-0.5 font-sans text-[12px] font-bold text-graphite">
+                      {group.items.length}
+                    </span>
+                  </h2>
                   <Link href={`/etudiant/cours/${id}`} className="navl text-[13px] font-medium">
                     Voir le module
                   </Link>
-                </h2>
+                </div>
                 <MaterialList materials={group.items} />
               </section>
             ))}

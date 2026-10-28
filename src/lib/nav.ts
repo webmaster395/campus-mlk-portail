@@ -34,8 +34,8 @@ export const STUDENT_NAV: NavSection[] = [
   {
     title: "Ma formation",
     items: [
-      { label: "Cours", href: "/etudiant/cours", icon: BookOpen },
-      { label: "Ressources", href: "/etudiant/ressources", icon: FolderOpen },
+      { label: "Mes cours", href: "/etudiant/cours", icon: BookOpen },
+      { label: "Mes ressources", href: "/etudiant/ressources", icon: FolderOpen },
       { label: "Travail à rendre", href: "/etudiant/travail", icon: FileText },
       { label: "Notes", href: "/etudiant/notes", icon: GraduationCap },
     ],

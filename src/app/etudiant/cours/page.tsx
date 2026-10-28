@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, CalendarDays, ClipboardList, FolderOpen } from "lucide-react";
+import { ArrowRight, BookOpen, CalendarDays, ClipboardList, FolderOpen } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import PageHeader from "@/components/ui/PageHeader";
 import PendingPromotion from "@/components/ui/PendingPromotion";
@@ -8,7 +8,7 @@ import { getCourses } from "@/lib/data/student";
 import { getViewer } from "@/lib/data/viewer";
 import { formatShortDay } from "@/lib/format";
 
-export const metadata: Metadata = { title: "Cours" };
+export const metadata: Metadata = { title: "Mes cours" };
 
 /** Les modules de la formation, avec la progression des séances. */
 export default async function CoursesPage() {
@@ -16,7 +16,7 @@ export default async function CoursesPage() {
   if (!viewer) return null;
 
   const header = (
-    <PageHeader eyebrow={viewer.formation?.title ?? "Espace apprentis"} title="Cours">
+    <PageHeader eyebrow={viewer.formation?.title ?? "Espace apprentis"} title="Mes cours">
       Les modules de votre formation : objectifs, séances, ressources et travail à rendre.
     </PageHeader>
   );
@@ -85,6 +85,12 @@ export default async function CoursesPage() {
                       </span>
                     )}
                   </p>
+
+                  <span className="mt-auto pt-5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-graphite px-4 py-2 text-[13px] font-semibold text-lime">
+                      Ouvrir le module <ArrowRight size={14} aria-hidden />
+                    </span>
+                  </span>
                 </Link>
               </li>
             );
