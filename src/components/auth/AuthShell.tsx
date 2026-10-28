@@ -42,10 +42,10 @@ export default function AuthShell({
         {/* Enveloppé : la colonne flex étirerait l'image en largeur */}
         <div className="relative z-10 self-start">
           <div className="lg:hidden">
-            <Logotype variant="blanc" height={52} priority />
+            <Logotype variant="blanc" height={44} priority />
           </div>
           <div className="hidden lg:block">
-            <Logotype variant="blanc" height={84} priority />
+            <Logotype variant="blanc" height={68} priority />
           </div>
         </div>
 
@@ -64,9 +64,9 @@ export default function AuthShell({
         {/* Logomark officiel en filigrane, sans le redessiner */}
         <div
           aria-hidden
-          className={`pointer-events-none absolute -right-28 -bottom-28 hidden opacity-[0.16] ${photo ? "" : "lg:block"}`}
+          className={`pointer-events-none absolute z-10 hidden lg:block ${photo ? "-right-14 -bottom-14 opacity-[0.28]" : "-right-28 -bottom-28 opacity-[0.16]"}`}
         >
-          <Logomark size={460} variant="principal" priority />
+          <Logomark size={photo ? 240 : 460} variant="principal" priority />
         </div>
       </aside>
 
