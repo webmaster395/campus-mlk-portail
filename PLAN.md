@@ -388,9 +388,28 @@ de l'espace étudiant (seule la RLS protège les données), dates en `Europe/Par
 
 ---
 
+## Branches et déploiement (à lire avant tout commit)
+
+- **`main` = production.** Chaque envoi sur `main` met à jour le site en ligne (Vercel). On n'y
+  travaille **jamais** directement.
+- **`preview` = branche de travail.** Toutes les modifications (Claude, Gemini, ou autre) sont
+  commitées et poussées sur `preview` : Vercel la publie à part, à une adresse de prévisualisation,
+  sans toucher au site en ligne.
+- **Mise en production** : quand la prévisualisation est validée par le propriétaire, fusionner
+  `preview` dans `main` (`git checkout main && git merge preview && git push`, ou une pull request
+  sur GitHub), puis revenir sur `preview`. Ne fusionner qu'à la demande explicite du propriétaire.
+- Avant chaque envoi : `npm run lint`, `npx tsc --noEmit` et `npm run build` doivent passer (un
+  build en échec bloque aussi la prévisualisation).
+- Dépôt : `github.com/webmaster395/campus-mlk-portail` (public : le plan gratuit de Vercel exige
+  un dépôt public pour déployer). Aucun secret dans le dépôt : `.env.local` et les identifiants de
+  test sont ignorés par git.
+- Vérifier la branche courante (`git branch --show-current`) : si c'est `main`, faire
+  `git checkout preview` avant de modifier quoi que ce soit.
+
 ## 8. Reprise par un autre assistant
 
 Si le travail est repris en cours de route :
+0. **Se placer sur la branche `preview`** (voir « Branches et déploiement » ci-dessus).
 1. Lire ce fichier, puis `AGENTS.md`. Lire la doc Next 16 dans `node_modules/next/dist/docs/`.
 2. `git log --oneline` pour voir la dernière étape terminée. Chaque commit porte le
    numéro de l'étape (« Étape 3 : coquille de l'espace étudiant »).
@@ -490,3 +509,11 @@ Si le travail est repris en cours de route :
 - [~] Étape 5 : finition faite (audit d'accessibilité scripté sur les 10 pages : un h1,
   champs et boutons nommés, pas d'image sans alt ; `noindex` ; README). **Reste la mise en
   ligne** : dépôt GitHub, Vercel, domaine, réglages Supabase listés à l'étape 2.
+- [x] Mise en ligne : dépôt GitHub `webmaster395/campus-mlk-portail`, déployé sur Vercel
+  (compte webmaster). Variables d'environnement Vercel : `NEXT_PUBLIC_SUPABASE_URL`,
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` (la clé `service_role` n'est pas exigée).
+  Comptes de démo à mot de passe simple, présentés aux clientes.
+- [ ] **Reste à faire avant d'ouvrir aux vrais apprentis** : Site URL et Redirect URLs dans
+  Supabase (Authentication), SMTP et modèles d'e-mails en français, suppression des comptes de
+  démo (`supabase/comptes-test-suppression.sql`), domaine personnalisé éventuel, vraies photos pour
+  les pages de connexion / inscription, protection contre les mots de passe piratés (plan Pro).
