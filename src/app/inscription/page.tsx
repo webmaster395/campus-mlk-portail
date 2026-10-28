@@ -7,7 +7,10 @@ export const metadata: Metadata = { title: "Créer un compte" };
 
 export default function SignupPage() {
   return (
-    <AuthShell tagline="Bienvenue chez MLK Campus.">
+    <AuthShell
+      tagline="Bienvenue chez MLK Campus."
+      photo={{ src: "/images/auth-inscription.jpg", position: "40% center" }}
+    >
       <p className="eyebrow m-0">Espace apprentis</p>
       <h1 className="nr mt-2 mb-1.5 text-[34px] leading-tight">Créer un compte</h1>
       <p className="mt-0 mb-4 text-[14.5px] leading-relaxed text-texte">

@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Connexion" };
 
 export default function LoginPage() {
   return (
-    <AuthShell>
+    <AuthShell photo={{ src: "/images/auth-connexion.jpg", position: "68% center" }}>
       <p className="eyebrow m-0">Espace apprentis</p>
       <h1 className="nr mt-2 mb-1.5 text-[34px] leading-tight">Se connecter</h1>
       <p className="mt-0 mb-5 text-[15px] leading-relaxed text-texte">

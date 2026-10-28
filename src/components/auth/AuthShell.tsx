@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Logomark from "@/components/brand/Logomark";
 import Logotype from "@/components/brand/Logotype";
 
@@ -8,16 +9,38 @@ import Logotype from "@/components/brand/Logotype";
  */
 export default function AuthShell({
   tagline = "Votre formation, au même endroit.",
+  photo,
   children,
 }: {
   tagline?: string;
+  /** Photo d'ambiance du panneau (ordinateur) ; position = object-position pour cadrer la personne. */
+  photo?: { src: string; position?: string };
   children: React.ReactNode;
 }) {
   return (
     <div className="grid min-h-screen grid-rows-[auto_1fr] bg-porcelaine lg:h-dvh lg:grid-cols-2 lg:grid-rows-1">
       <aside className="relative flex flex-col justify-between overflow-hidden bg-graphite px-5 py-5 text-porcelaine sm:px-10 lg:px-14 lg:py-12">
+        {photo && (
+          <>
+            <Image
+              src={photo.src}
+              alt=""
+              fill
+              priority
+              sizes="50vw"
+              className="pointer-events-none hidden object-cover lg:block"
+              style={{ objectPosition: photo.position ?? "center" }}
+            />
+            {/* Voile graphite : garde le texte blanc lisible sur la photo */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 hidden bg-gradient-to-t from-graphite/90 via-graphite/55 to-graphite/80 lg:block"
+            />
+          </>
+        )}
+
         {/* Enveloppé : la colonne flex étirerait l'image en largeur */}
-        <div className="self-start">
+        <div className="relative z-10 self-start">
           <div className="lg:hidden">
             <Logotype variant="blanc" height={52} priority />
           </div>
@@ -41,7 +64,7 @@ export default function AuthShell({
         {/* Logomark officiel en filigrane, sans le redessiner */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-28 -bottom-28 hidden opacity-[0.16] lg:block"
+          className={`pointer-events-none absolute -right-28 -bottom-28 hidden opacity-[0.16] ${photo ? "" : "lg:block"}`}
         >
           <Logomark size={460} variant="principal" priority />
         </div>
