@@ -84,8 +84,8 @@ export default function MobileNav({
             className="drawer-in relative flex h-full w-[260px] max-w-[82vw] flex-col overflow-y-auto overscroll-contain bg-white shadow-[0_0_40px_rgba(0,0,0,0.25)] outline-none"
           >
             {/* Bandeau du logo teinté selon la filière */}
-            <div className="flex h-20 shrink-0 items-center justify-between bg-band px-4">
-              <Logotype variant="blanc" height={54} />
+            <div className="flex h-20 shrink-0 items-center justify-between bg-graphite px-4">
+              <Logotype variant="blanc" height={46} />
               <button
                 type="button"
                 onClick={() => setOpen(false)}

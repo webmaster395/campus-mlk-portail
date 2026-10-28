@@ -14,7 +14,7 @@ export type FormationTheme = {
   levelLabel: string;
   color: string;
   textDark: string;
-  /** Teinte soutenue de la filière : fond du bandeau du logo, accents, texte (contraste ≥ 4,5:1 avec du blanc). */
+  /** Teinte soutenue de la filière : couleur du nom dans le profil (contraste ≥ 4,5:1 avec du blanc). */
   deep: string;
   /** Fond très pâle (pastilles, surfaces teintées). */
   pale: string;
@@ -95,19 +95,4 @@ export function getFormationTheme(titleOrSlug?: string | null): FormationTheme {
   }
 
   return FORMATION_THEMES["monteur-audiovisuel"];
-}
-
-/**
- * Variables CSS qui recolorent l'espace selon la filière : l'accent interactif (iris), les
- * surfaces pâles et le bandeau du logo. Sans filière, la charte MLK Campus d'origine s'applique.
- * À poser sur l'élément racine de la coquille ; les utilitaires (bg-iris, text-iris, bg-band…)
- * lisent ces variables.
- */
-export function formationCssVars(theme: FormationTheme | null): Record<string, string> {
-  if (!theme) return {};
-  return {
-    "--color-iris": theme.deep,
-    "--color-lilas-pale": theme.pale,
-    "--color-band": theme.deep,
-  };
 }

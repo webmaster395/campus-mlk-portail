@@ -34,7 +34,7 @@ export default function ProfileBlock({
       >
         <Avatar name={fullName} size={36} src={avatarUrl} />
         <span className="min-w-0 group-data-[collapsed=true]/sidebar:sr-only">
-          <span className="block truncate text-sm font-semibold text-iris">{fullName}</span>
+          <span className="block truncate text-sm font-semibold text-graphite" style={theme ? { color: theme.deep } : undefined}>{fullName}</span>
           {theme ? (
             <span className="flex items-center gap-1.5 truncate text-xs text-texte-doux">
               <span

@@ -42,16 +42,16 @@ export default function Sidebar({
       }`}
     >
       {/* Bandeau du logo (teinte de la filière), 80 px, aligné avec l'en-tête */}
-      <div className="relative flex h-20 shrink-0 items-center justify-center bg-band px-2">
+      <div className="relative flex h-20 shrink-0 items-center justify-center bg-graphite px-2">
         <Link
           href="/etudiant"
           aria-label="Accueil du portail"
           className="flex items-center justify-center transition-opacity hover:opacity-90"
         >
           {collapsed ? (
-            <Logomark variant="blanc" size={38} priority />
+            <Logomark variant="blanc" size={34} priority />
           ) : (
-            <Logotype variant="blanc" height={58} priority />
+            <Logotype variant="blanc" height={50} priority />
           )}
         </Link>
       </div>

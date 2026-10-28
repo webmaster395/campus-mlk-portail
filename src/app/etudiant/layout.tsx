@@ -6,7 +6,6 @@ import MobileNav from "@/components/shell/MobileNav";
 import ProfileBlock from "@/components/shell/ProfileBlock";
 import Sidebar from "@/components/shell/Sidebar";
 import { getViewer } from "@/lib/data/viewer";
-import { formationCssVars, getFormationTheme } from "@/lib/formations";
 import { SIDEBAR_COOKIE } from "@/lib/nav";
 
 /*
@@ -37,10 +36,9 @@ async function StudentShell({ children }: { children: React.ReactNode }) {
     formationTitle: viewer.formation?.title ?? null,
     avatarUrl: viewer.avatarUrl,
   };
-  const theme = viewer.formation ? getFormationTheme(viewer.formation.title) : null;
 
   return (
-    <div className="min-h-screen bg-porcelaine md:flex" style={formationCssVars(theme)}>
+    <div className="min-h-screen bg-porcelaine md:flex">
       <a
         href="#contenu"
         className="sr-only z-[60] rounded-full bg-graphite px-5 py-3 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -68,7 +66,7 @@ function ShellFallback() {
   return (
     <div className="min-h-screen bg-porcelaine md:flex" aria-busy="true">
       <div className="hidden h-screen w-[216px] shrink-0 border-r border-black/[0.08] bg-white md:block">
-        <div className="h-20 bg-band" />
+        <div className="h-20 bg-graphite" />
       </div>
       <div className="h-16 flex-1 border-b border-black/[0.08]" />
     </div>
