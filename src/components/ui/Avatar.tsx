@@ -3,10 +3,13 @@ export default function Avatar({
   name,
   size = 40,
   src = null,
+  color,
 }: {
   name: string;
   size?: number;
   src?: string | null;
+  /** Fond des initiales (couleur de la filière) ; violet iris par défaut. */
+  color?: string;
 }) {
   if (src) {
     return (
@@ -35,7 +38,7 @@ export default function Avatar({
     <span
       aria-hidden
       className="flex shrink-0 items-center justify-center rounded-full bg-iris font-semibold text-white"
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.38) }}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.38), ...(color ? { backgroundColor: color } : {}) }}
     >
       {initials}
     </span>

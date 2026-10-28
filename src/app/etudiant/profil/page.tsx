@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Briefcase, CalendarRange, GraduationCap, Mail } from "lucide-react";
+import { getFormationTheme } from "@/lib/formations";
 import AvatarUploader from "@/components/profile/AvatarUploader";
 import PasswordForm from "@/components/profile/PasswordForm";
 import Avatar from "@/components/ui/Avatar";
@@ -39,7 +40,12 @@ export default async function ProfilePage() {
       <div className="pg2 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <section className="card flex flex-col gap-6 p-6">
           <div className="flex flex-wrap items-center gap-5">
-            <Avatar name={viewer.fullName} size={88} src={viewer.avatarUrl} />
+            <Avatar
+              name={viewer.fullName}
+              size={88}
+              src={viewer.avatarUrl}
+              color={viewer.formation ? getFormationTheme(viewer.formation.title).deep : undefined}
+            />
             <div className="min-w-0">
               <h2 className="nr m-0 text-[26px] leading-tight">{viewer.fullName}</h2>
               <p className="mt-1 mb-0 text-[14px] text-texte-doux">En apprentissage à MLK Campus</p>

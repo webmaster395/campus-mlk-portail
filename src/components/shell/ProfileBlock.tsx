@@ -32,9 +32,9 @@ export default function ProfileBlock({
         title={fullName}
         className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl p-2 transition-colors group-data-[collapsed=true]/sidebar:justify-center hover:bg-black/[0.04]"
       >
-        <Avatar name={fullName} size={36} src={avatarUrl} />
+        <Avatar name={fullName} size={36} src={avatarUrl} color={theme?.deep} />
         <span className="min-w-0 group-data-[collapsed=true]/sidebar:sr-only">
-          <span className="block truncate text-sm font-semibold text-graphite" style={theme ? { color: theme.deep } : undefined}>{fullName}</span>
+          <span className="block truncate text-sm font-semibold text-graphite">{fullName}</span>
           {theme ? (
             <span className="flex items-center gap-1.5 truncate text-xs text-texte-doux">
               <span
