@@ -9,7 +9,7 @@ import { signUp, type SignUpState } from "./actions";
 const INITIAL: SignUpState = {
   error: null,
   sentTo: null,
-  values: { firstName: "", lastName: "", email: "" },
+  values: { gender: "", firstName: "", lastName: "", email: "" },
 };
 
 export default function SignupForm() {
@@ -36,10 +36,35 @@ export default function SignupForm() {
   // key : les champs reprennent les valeurs saisies après une erreur
   const key = `${state.values.email}|${state.error}`;
   return (
-    <form action={action} className="flex flex-col gap-5" key={key}>
+    <form action={action} className="flex flex-col gap-3.5" key={key}>
       {state.error && <Notice tone="error">{state.error}</Notice>}
 
-      <div className="grid gap-5 sm:grid-cols-2">
+      <fieldset className="m-0 border-0 p-0">
+        <legend className="lbl">Civilité</legend>
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            ["madame", "Madame"],
+            ["monsieur", "Monsieur"],
+          ].map(([value, label]) => (
+            <label
+              key={value}
+              className="flex cursor-pointer items-center gap-2.5 rounded-[11px] border border-black/[0.18] bg-white px-4 py-2.5 text-[14px] font-medium has-[:checked]:border-iris has-[:checked]:bg-lilas-pale has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-iris"
+            >
+              <input
+                type="radio"
+                name="gender"
+                value={value}
+                required
+                defaultChecked={state.values.gender === value}
+                className="chk !h-4 !w-4"
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div className="grid grid-cols-2 gap-3.5">
         <div>
           <label className="lbl" htmlFor="first_name">
             Prénom
@@ -86,20 +111,22 @@ export default function SignupForm() {
         />
       </div>
 
-      <PasswordField
-        label="Mot de passe"
-        name="password"
-        autoComplete="new-password"
-        minLength={8}
-        placeholder="8 caractères minimum"
-      />
-      <PasswordField
-        label="Confirmer le mot de passe"
-        name="confirm"
-        autoComplete="new-password"
-        minLength={8}
-        placeholder="••••••••"
-      />
+      <div className="grid gap-3.5 sm:grid-cols-2">
+        <PasswordField
+          label="Mot de passe"
+          name="password"
+          autoComplete="new-password"
+          minLength={8}
+          placeholder="8 caractères min."
+        />
+        <PasswordField
+          label="Confirmer"
+          name="confirm"
+          autoComplete="new-password"
+          minLength={8}
+          placeholder="••••••••"
+        />
+      </div>
 
       <button type="submit" className="btnA justify-center" disabled={pending}>
         {pending ? "Création du compte…" : "Créer mon compte"} <span className="ar" aria-hidden>→</span>

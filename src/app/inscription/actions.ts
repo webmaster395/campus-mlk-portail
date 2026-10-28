@@ -8,7 +8,7 @@ import { siteUrl } from "@/lib/site";
 export type SignUpState = {
   error: string | null;
   sentTo: string | null;
-  values: { firstName: string; lastName: string; email: string };
+  values: { gender: string; firstName: string; lastName: string; email: string };
 };
 
 /**
@@ -19,6 +19,7 @@ export type SignUpState = {
  */
 export async function signUp(_prev: SignUpState, formData: FormData): Promise<SignUpState> {
   const values = {
+    gender: String(formData.get("gender") ?? ""),
     firstName: String(formData.get("first_name") ?? "").trim(),
     lastName: String(formData.get("last_name") ?? "").trim(),
     email: String(formData.get("email") ?? "").trim(),
@@ -27,6 +28,7 @@ export async function signUp(_prev: SignUpState, formData: FormData): Promise<Si
   const confirm = String(formData.get("confirm") ?? "");
   const fail = (error: string): SignUpState => ({ error, sentTo: null, values });
 
+  if (values.gender !== "madame" && values.gender !== "monsieur") return fail("Indiquez votre civilité : Madame ou Monsieur.");
   if (!values.firstName || !values.lastName) return fail("Renseignez votre prénom et votre nom.");
   if (values.firstName.length > 80 || values.lastName.length > 80) return fail("Prénom ou nom trop long.");
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
@@ -40,7 +42,7 @@ export async function signUp(_prev: SignUpState, formData: FormData): Promise<Si
     email: values.email,
     password,
     options: {
-      data: { first_name: values.firstName, last_name: values.lastName },
+      data: { gender: values.gender, first_name: values.firstName, last_name: values.lastName },
       emailRedirectTo: `${await siteUrl()}/auth/callback?next=/etudiant`,
     },
   });

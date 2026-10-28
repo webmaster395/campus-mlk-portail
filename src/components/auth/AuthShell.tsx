@@ -14,11 +14,16 @@ export default function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="grid min-h-screen grid-rows-[auto_1fr] bg-porcelaine lg:grid-cols-2 lg:grid-rows-1">
-      <aside className="relative flex flex-col justify-between overflow-hidden bg-graphite px-5 py-6 text-porcelaine sm:px-10 lg:px-14 lg:py-12">
+    <div className="grid min-h-screen grid-rows-[auto_1fr] bg-porcelaine lg:h-dvh lg:grid-cols-2 lg:grid-rows-1">
+      <aside className="relative flex flex-col justify-between overflow-hidden bg-graphite px-5 py-5 text-porcelaine sm:px-10 lg:px-14 lg:py-12">
         {/* Enveloppé : la colonne flex étirerait l'image en largeur */}
         <div className="self-start">
-          <Logotype variant="blanc" height={40} priority />
+          <div className="lg:hidden">
+            <Logotype variant="blanc" height={52} priority />
+          </div>
+          <div className="hidden lg:block">
+            <Logotype variant="blanc" height={84} priority />
+          </div>
         </div>
 
         <div className="relative z-10 hidden max-w-[440px] lg:block">
@@ -42,8 +47,8 @@ export default function AuthShell({
         </div>
       </aside>
 
-      <main className="flex items-start justify-center px-5 py-10 sm:px-10 lg:items-center lg:py-16">
-        <div className="pg w-full max-w-[420px]">{children}</div>
+      <main className="flex items-start justify-center px-5 py-6 sm:px-10 lg:items-center lg:overflow-y-auto lg:py-6">
+        <div className="pg w-full max-w-[440px]">{children}</div>
       </main>
     </div>
   );

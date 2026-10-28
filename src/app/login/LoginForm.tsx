@@ -17,7 +17,7 @@ export default function LoginForm() {
   const notice = LOGIN_NOTICES[searchParams.get("erreur") ?? searchParams.get("info") ?? ""];
 
   return (
-    <form action={action} className="flex flex-col gap-5">
+    <form action={action} className="flex flex-col gap-4">
       {state.error ? (
         <Notice tone="error">{state.error}</Notice>
       ) : (

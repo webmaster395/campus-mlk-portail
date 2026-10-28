@@ -362,6 +362,7 @@ export type Database = {
           deactivated: boolean
           email: string
           first_name: string
+          gender: string | null
           id: string
           last_name: string
           promotion_id: string | null
@@ -376,6 +377,7 @@ export type Database = {
           deactivated?: boolean
           email: string
           first_name?: string
+          gender?: string | null
           id: string
           last_name?: string
           promotion_id?: string | null
@@ -390,6 +392,7 @@ export type Database = {
           deactivated?: boolean
           email?: string
           first_name?: string
+          gender?: string | null
           id?: string
           last_name?: string
           promotion_id?: string | null
