@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Megaphone } from "lucide-react";
-import Logomark from "@/components/brand/Logomark";
+import ThemeToggle from "./ThemeToggle";
 import { sectionTitle } from "@/lib/nav";
 
 /**
@@ -37,15 +37,14 @@ export default function AppHeader({
     <header className="sticky top-0 z-30 border-b border-black/[0.08] bg-porcelaine/90 backdrop-blur">
       <div className="flex h-16 items-center gap-3 px-4 sm:px-8 md:h-20">
         {mobileNav}
-        <Link href="/etudiant" aria-label="Accueil du portail" className="flex md:hidden">
-          <Logomark size={26} />
-        </Link>
         <p className="nr m-0 flex-1 truncate text-[19px] leading-tight sm:text-[21px]">{title}</p>
 
         {/* Pilule Promotion bien visible */}
         <span className="hidden rounded-full border border-iris/30 bg-lilas-pale px-3.5 py-1 text-[11.5px] font-semibold tracking-[0.08em] text-iris uppercase sm:inline">
           {badgeText}
         </span>
+
+        <ThemeToggle />
 
         {/* Raccourci vers les annonces */}
         <Link

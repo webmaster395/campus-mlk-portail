@@ -304,3 +304,49 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+/*
+  Thème sombre (data-theme="dark" sur <html>, posé par le script de app/layout.tsx).
+  Les jetons sont redéfinis ; les quelques couleurs codées en dur de l'interface sont
+  rattrapées ci-dessous. Hors couches exprès : ces règles doivent l'emporter sur les utilitaires.
+*/
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-porcelaine: #121214;
+  --color-texte: #d4d4d9;
+  --color-texte-doux: #9d9da6;
+  --color-encre: #ececf0;
+  --color-lilas-pale: #2b2644;
+  --color-iris: #a99cff;
+}
+html[data-theme="dark"] body { background: #121214; color: #f2f2f4; }
+html[data-theme="dark"] .text-graphite,
+html[data-theme="dark"] .nr { color: #f2f2f4; }
+html[data-theme="dark"] .bg-white,
+html[data-theme="dark"] .card { background-color: #1b1b1f; }
+html[data-theme="dark"] .bg-graphite { background-color: #2a2a30; }
+html[data-theme="dark"] [class*="border-black"],
+html[data-theme="dark"] .card { border-color: rgba(255, 255, 255, 0.1); }
+html[data-theme="dark"] [class^="bg-black/"],
+html[data-theme="dark"] [class*=" bg-black/"] { background-color: rgba(255, 255, 255, 0.07); }
+html[data-theme="dark"] [class*="hover:bg-black"]:hover { background-color: rgba(255, 255, 255, 0.09); }
+html[data-theme="dark"] .bg-lime { color: #1a1a1a; }
+html[data-theme="dark"] [class*="bg-lime/"] { background-color: rgba(209, 255, 94, 0.12); color: #d1ff5e; }
+html[data-theme="dark"] [class*="border-[#a8d922]"] { border-color: rgba(209, 255, 94, 0.35); }
+html[data-theme="dark"] .btnA { background: #f2f2f4; color: #1a1a1a; }
+html[data-theme="dark"] .btnO { color: #f2f2f4; border-color: rgba(255, 255, 255, 0.28); }
+html[data-theme="dark"] .fld { background: #1b1b1f; color: #f2f2f4; border-color: rgba(255, 255, 255, 0.2); }
+html[data-theme="dark"] .lbl { color: #e4e4e8; }
+html[data-theme="dark"] .navl { color: #d4d4d9; }
+html[data-theme="dark"] .navl::after { background: #f2f2f4; }
+html[data-theme="dark"] [class*="text-[#a3203f]"] { color: #ff8fa8; }
+html[data-theme="dark"] [class*="text-[#1d6b55]"] { color: #6fe0bf; }
+html[data-theme="dark"] [class*="text-[#1f6351]"] { color: #6fe0bf; }
+html[data-theme="dark"] [class*="text-[#7a4b00]"] { color: #f4bf4c; }
+html[data-theme="dark"] [class*="text-[#7a5600]"] { color: #f4bf4c; }
+html[data-theme="dark"] [class*="text-[#6a3fb0]"] { color: #c9b8ff; }
+html[data-theme="dark"] [class*="text-[#63329c]"] { color: #c9b8ff; }
+html[data-theme="dark"] [class*="text-[#4d6800]"] { color: #d1ff5e; }
+html[data-theme="dark"] [class*="text-[#8b918e]"] { color: #a5a5ad; }
+html[data-theme="dark"] [class*="text-[#4b524f]"] { color: #c4c4cb; }
+html[data-theme="dark"] [class*="bg-white/"] { background-color: rgba(255, 255, 255, 0.07); }

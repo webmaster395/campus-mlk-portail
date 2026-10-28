@@ -24,7 +24,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="fr" className={fraunces.variable}>
+    <html lang="fr" className={fraunces.variable} suppressHydrationWarning>
+      <head>
+        {/* Thème clair / sombre posé avant l'affichage (pas d'éclair blanc) : choix gardé, sinon thème du système */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("portail-theme");var d=t?t==="sombre":matchMedia("(prefers-color-scheme: dark)").matches;document.documentElement.dataset.theme=d?"dark":"light"}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen">{children}</body>
     </html>
   );

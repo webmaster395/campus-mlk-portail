@@ -43,7 +43,7 @@ export default async function StudentHomePage() {
               style={{
                 backgroundColor: theme.bgLight,
                 borderColor: theme.borderSoft,
-                color: theme.textDark,
+                color: `light-dark(${theme.textDark}, ${theme.color})`,
               }}
             >
               {theme.category} · {theme.levelLabel}
