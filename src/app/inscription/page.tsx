@@ -9,7 +9,7 @@ export default function SignupPage() {
   return (
     <AuthShell
       tagline="Bienvenue chez MLK Campus."
-      photo={{ src: "/images/auth-inscription.jpg", position: "40% center" }}
+      photo={{ src: "/images/auth-inscription.jpg", position: "40% 30%" }}
     >
       <p className="eyebrow m-0">Espace apprentis</p>
       <h1 className="nr mt-2 mb-1.5 text-[34px] leading-tight">Créer un compte</h1>

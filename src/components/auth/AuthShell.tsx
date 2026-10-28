@@ -13,13 +13,13 @@ export default function AuthShell({
   children,
 }: {
   tagline?: string;
-  /** Photo d'ambiance du panneau (ordinateur) ; position = object-position pour cadrer la personne. */
+  /** Photo d'ambiance du panneau (bandeau sur téléphone) ; position = object-position pour cadrer la personne. */
   photo?: { src: string; position?: string };
   children: React.ReactNode;
 }) {
   return (
     <div className="grid min-h-screen grid-rows-[auto_1fr] bg-porcelaine lg:h-dvh lg:grid-cols-2 lg:grid-rows-1">
-      <aside className="relative flex flex-col justify-between overflow-hidden bg-graphite px-5 py-5 text-porcelaine sm:px-10 lg:px-14 lg:py-12">
+      <aside className="relative flex flex-col justify-between overflow-hidden bg-graphite px-5 py-5 text-porcelaine min-h-[132px] lg:min-h-0 sm:px-10 lg:px-14 lg:py-12">
         {photo && (
           <>
             <Image
@@ -28,13 +28,13 @@ export default function AuthShell({
               fill
               priority
               sizes="50vw"
-              className="pointer-events-none hidden object-cover lg:block"
+              className="pointer-events-none object-cover"
               style={{ objectPosition: photo.position ?? "center" }}
             />
             {/* Voile graphite : garde le texte blanc lisible sur la photo */}
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 hidden bg-gradient-to-t from-graphite/90 via-graphite/55 to-graphite/80 lg:block"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-graphite/85 via-graphite/55 to-graphite/80"
             />
           </>
         )}
