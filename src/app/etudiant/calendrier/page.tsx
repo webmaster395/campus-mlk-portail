@@ -61,15 +61,15 @@ export default async function CalendarPage({ searchParams }: PageProps<"/etudian
 
   const [sessions, periods] = await Promise.all([getSessionsBetween(from, to), getCompanyPeriods(from, to)]);
 
-  const sessionsByDay = new Map<string, DashboardSession[]>();
+  const sessionsByDay: Record<string, DashboardSession[]> = {};
   for (const session of sessions) {
     const day = parisDayKey(session.startsAt);
-    sessionsByDay.set(day, [...(sessionsByDay.get(day) ?? []), session]);
+    sessionsByDay[day] = [...(sessionsByDay[day] ?? []), session];
   }
-  const companyByDay = new Map<string, CompanyPeriod>();
+  const companyByDay: Record<string, CompanyPeriod> = {};
   for (let day = from; day <= to; day = addDays(day, 1)) {
     const period = periods.find((p) => isWithin(day, p.startsOn, p.endsOn));
-    if (period) companyByDay.set(day, period);
+    if (period) companyByDay[day] = period;
   }
 
   return (
@@ -99,6 +99,7 @@ export default async function CalendarPage({ searchParams }: PageProps<"/etudian
           today={today}
           sessionsByDay={sessionsByDay}
           companyByDay={companyByDay}
+          companyName={viewer.companyName}
         />
       )}
     </>

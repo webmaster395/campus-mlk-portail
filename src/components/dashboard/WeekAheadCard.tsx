@@ -67,67 +67,58 @@ export default async function WeekAheadCard({ now, className = "" }: { now: Date
 
           let cardTone = "border-black/[0.07] bg-porcelaine/55 hover:border-black/15";
           if (isCampus) {
-            cardTone = "border-iris/25 bg-lilas-pale/45 hover:border-iris/50";
+            cardTone = "border-iris/20 bg-lilas-pale/40 hover:border-iris/45";
           } else if (isCompany) {
-            cardTone = "border-[#a8d922]/55 bg-lime/25 hover:border-[#8cb814]";
+            cardTone = "border-[#a8d922]/50 bg-lime/20 hover:border-[#8cb814]";
           }
 
           return (
             <li key={day} className="flex">
               <Link
                 href={`/etudiant/calendrier?vue=semaine&date=${day}`}
-                className={`group flex w-full flex-col justify-between rounded-xl border p-3 transition-all ${cardTone} ${
+                className={`group flex w-full flex-col justify-between gap-3 rounded-xl border p-3.5 transition-all ${cardTone} ${
                   isToday ? "ring-2 ring-iris ring-offset-2 ring-offset-white" : ""
                 }`}
               >
-                {/* En-tête du jour : Lun 2 + pastille Aujourd'hui */}
+                {/* En-tête du jour : Lun 26 + pastille Aujourd'hui */}
                 <div className="flex items-center justify-between gap-1.5">
-                  <span className="text-[11.5px] font-bold tracking-[0.06em] text-texte-doux uppercase">
-                    {weekdayLabel}
-                  </span>
-                  {isToday ? (
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] font-bold tracking-[0.06em] text-texte-doux uppercase">
+                      {weekdayLabel}
+                    </span>
+                    <span className="nr text-[19px] leading-none text-graphite">{dayNum}</span>
+                  </div>
+                  {isToday && (
                     <span className="rounded-full bg-iris px-2 py-0.5 text-[10px] font-bold text-white">
                       Auj.
                     </span>
-                  ) : (
-                    <span className="text-[15px] font-bold tabular-nums text-graphite">{dayNum}</span>
                   )}
                 </div>
 
-                {isToday && (
-                  <div className="mt-0.5 text-[17px] font-bold tabular-nums leading-tight text-graphite">
-                    {dayNum}
-                  </div>
-                )}
-
-                {/* Corps : Campus / Entreprise / Libre */}
-                <div className="mt-3 flex flex-col gap-1">
+                {/* Corps épuré : Campus (horaires seuls) / Entreprise / Libre */}
+                <div className="flex flex-col gap-0.5">
                   {isCampus && firstSession && lastSession ? (
                     <>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-[0.03em] text-iris uppercase">
-                        <GraduationCap size={13} aria-hidden />
+                      <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-iris">
+                        <GraduationCap size={14} aria-hidden />
                         Campus
                       </span>
-                      <span className="line-clamp-2 text-[12.5px] font-semibold leading-snug text-graphite group-hover:text-iris">
-                        {firstSession.title}
-                      </span>
-                      <span className="mt-0.5 text-[11.5px] font-medium tabular-nums text-texte-doux">
+                      <span className="text-[12.5px] font-semibold tabular-nums text-graphite">
                         {formatTime(firstSession.startsAt)} – {formatTime(lastSession.endsAt)}
-                        {daySessions.length > 1 ? ` · ${daySessions.length} séances` : ""}
                       </span>
                     </>
                   ) : isCompany ? (
                     <>
-                      <span className="inline-flex items-center gap-1 text-[11px] font-bold tracking-[0.03em] text-[#4d6800] uppercase">
-                        <Briefcase size={12} aria-hidden />
+                      <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#4d6800]">
+                        <Briefcase size={13} aria-hidden />
                         Entreprise
                       </span>
-                      <span className="text-[12.5px] font-semibold leading-snug text-graphite">
-                        Journée en alternance
+                      <span className="text-[12px] font-medium text-texte-doux">
+                        Alternance
                       </span>
                     </>
                   ) : (
-                    <span className="text-[12px] text-texte-doux">Aucun cours prévu</span>
+                    <span className="text-[12px] text-texte-doux">Aucun cours</span>
                   )}
                 </div>
               </Link>
