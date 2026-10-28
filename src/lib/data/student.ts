@@ -304,6 +304,7 @@ export type GradeReportCourse = {
     id: string;
     title: string;
     heldOn: string;
+    kind: string;
     maxScore: number;
     coefficient: number;
     score: number | null;
@@ -321,7 +322,7 @@ export async function getGradeReport(): Promise<GradeReportCourse[]> {
   const supabase = await studentClient();
   const { data, error } = await supabase
     .from("evaluations")
-    .select("id, title, held_on, max_score, coefficient, course:courses(id, title, position), grades(score, result, comment)")
+    .select("id, title, held_on, kind, max_score, coefficient, course:courses(id, title, position), grades(score, result, comment)")
     .order("held_on");
   if (error) throw new Error(`Chargement des notes impossible : ${error.message}`);
 
@@ -339,6 +340,7 @@ export async function getGradeReport(): Promise<GradeReportCourse[]> {
       id: row.id,
       title: row.title,
       heldOn: row.held_on,
+      kind: row.kind,
       maxScore: row.max_score,
       coefficient: row.coefficient,
       score: grade?.score ?? null,

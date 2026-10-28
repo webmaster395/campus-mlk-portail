@@ -517,3 +517,12 @@ Si le travail est repris en cours de route :
   Supabase (Authentication), SMTP et modèles d'e-mails en français, suppression des comptes de
   démo (`supabase/comptes-test-suppression.sql`), domaine personnalisé éventuel, vraies photos pour
   les pages de connexion / inscription, protection contre les mots de passe piratés (plan Pro).
+- [x] Retour des clientes (démo) : principe et direction artistique validés. Les cours de démo
+  doivent se lire comme des tests : titres préfixés « Cours test – » dans `seed.sql` (à appliquer
+  aussi en base : `update courses set title = 'Cours test – ' || title`).
+- [ ] **Phase 2, espace formateur (à cadrer avec les clientes, retour attendu fin de semaine
+  prochaine)** : calendrier et planning de cours, saisie du nom du cours, ajout de supports et
+  de devoirs, évaluations (choisir l'étudiant et le cours, note, coefficient, type : partiel,
+  devoir maison…). Facturation : probablement hors périmètre, en discussion avec la direction.
+- [x] Type d'évaluation : colonne `evaluations.kind` (partiel, devoir_sur_table, devoir_maison, ecf,
+  oral, projet, autre), migration `20261028212856_type_evaluation`, pastille sur la page Notes.

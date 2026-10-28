@@ -52,28 +52,28 @@ on conflict (id) do update set
 -- Monteur audiovisuel (promotion principale de démonstration)
 insert into public.courses (id, formation_id, title, description, objectives, competency_block, position) values
   ('c0000000-0000-4000-8000-000000000001', 'f0000000-0000-4000-8000-000000000001',
-    'Techniques de montage et outils de post-production',
+    'Cours test – Techniques de montage et outils de post-production',
     'Prendre en main les logiciels professionnels (Premiere Pro, DaVinci Resolve) et structurer un workflow de montage efficace.',
     array['Dérusher et synchroniser des prises multicaméras', 'Construire un premier ours (assemblage narratif)', 'Gérer les raccords d''action et de regard'],
     'CCP 1', 1),
   ('c0000000-0000-4000-8000-000000000002', 'f0000000-0000-4000-8000-000000000001',
-    'Narration visuelle, rythme et découpage',
+    'Cours test – Narration visuelle, rythme et découpage',
     'Donner vie à un récit à travers le tempo, le choix des angles et la dynamique émotionnelle des plans.',
     array['Analyser une note d''intention et un scénario', 'Maîtriser le sens du rythme au montage', 'Accorder l''image et la bande sonore avec fluidité'],
     'CCP 1', 2),
   ('c0000000-0000-4000-8000-000000000003', 'f0000000-0000-4000-8000-000000000001',
-    'Étalonnage colorimétrique et post-production sonore',
+    'Cours test – Étalonnage colorimétrique et post-production sonore',
     'Corriger les défauts d''éclairage, harmoniser la colorimétrie et traiter le mixage audio aux normes professionnelles.',
     array['Effectuer la balance des blancs et des contrastes', 'Créer un look visuel cinématographique cohérent', 'Nettoyer les voix et mixer ambiances et musiques (-23 LUFS)'],
     'CCP 2', 3),
   ('c0000000-0000-4000-8000-000000000004', 'f0000000-0000-4000-8000-000000000001',
-    'Habillage graphique et motion design',
+    'Cours test – Habillage graphique et motion design',
     'Créer des éléments animés pour enrichir les productions : génériques, synthés, titrages et transitions After Effects.',
     array['Créer des bandeaux et titrages animés pour le web et la TV', 'Animer un logotype ou une icône de marque', 'Exporter aux spécifications broadcast et réseaux sociaux'],
     'CCP 2', 4),
   -- Commis de cuisine (seconde filière de démo)
   ('c0000000-0000-4000-8000-000000000005', 'f0000000-0000-4000-8000-000000000003',
-    'Techniques culinaires de base et organisation du poste',
+    'Cours test – Techniques culinaires de base et organisation du poste',
     'Maîtrise des taillages, cuissons élémentaires et de la méthode HACCP en brigade.',
     array['Tailler légumes, viandes et poissons avec rigueur', 'Conduire des cuissons maîtrisées', 'Appliquer scrupuleusement les règles d''hygiène alimentaire'],
     'CCP 1', 1)
@@ -228,21 +228,21 @@ on conflict (id) do update set
 with ref as (
   select (date_trunc('week', now() at time zone 'Europe/Paris'))::date as monday
 )
-insert into public.evaluations (id, course_id, promotion_id, title, held_on, max_score, coefficient, published)
+insert into public.evaluations (id, course_id, promotion_id, title, held_on, max_score, coefficient, published, kind)
 select * from (
   select 'e0000000-0000-4000-8000-000000000001'::uuid, 'c0000000-0000-4000-8000-000000000001'::uuid,
     'b0000000-0000-4000-8000-000000000001'::uuid, 'Épreuve pratique : Montage d''une bande-annonce',
-    ref.monday - 14, 20::numeric, 2::numeric, true
+    ref.monday - 14, 20::numeric, 2::numeric, true, 'ecf'
   from ref
   union all
   select 'e0000000-0000-4000-8000-000000000002', 'c0000000-0000-4000-8000-000000000003',
     'b0000000-0000-4000-8000-000000000001', 'Étalonnage colorimétrique et conformité broadcast',
-    ref.monday - 7, 20::numeric, 1::numeric, true
+    ref.monday - 7, 20::numeric, 1::numeric, true, 'devoir_sur_table'
   from ref
   union all
   select 'e0000000-0000-4000-8000-000000000003', 'c0000000-0000-4000-8000-000000000002',
     'b0000000-0000-4000-8000-000000000001', 'Analyse filmique et intentions de montage',
-    ref.monday - 1, 20::numeric, 1::numeric, false
+    ref.monday - 1, 20::numeric, 1::numeric, false, 'partiel'
   from ref
 ) as seed_evaluations
 on conflict (id) do update set
@@ -252,7 +252,8 @@ on conflict (id) do update set
   held_on = excluded.held_on,
   max_score = excluded.max_score,
   coefficient = excluded.coefficient,
-  published = excluded.published;
+  published = excluded.published,
+  kind = excluded.kind;
 
 -- ---------------------------------------------------------------------------
 -- 8. Annonces générales et pédagogiques

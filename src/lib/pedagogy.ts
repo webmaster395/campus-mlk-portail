@@ -35,6 +35,20 @@ export function compareTodo(
   return new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime();
 }
 
+const EVALUATION_KINDS: Record<string, string> = {
+  partiel: "Partiel",
+  devoir_sur_table: "Devoir sur table",
+  devoir_maison: "Devoir maison",
+  ecf: "ECF",
+  oral: "Oral",
+  projet: "Projet",
+};
+
+/** Libellé du type d'évaluation (null pour « autre », qu'on n'affiche pas). */
+export function evaluationKindLabel(kind: string): string | null {
+  return EVALUATION_KINDS[kind] ?? null;
+}
+
 export type CompetencyResult = "acquis" | "en_cours" | "non_acquis";
 
 const RESULT_LABELS: Record<CompetencyResult, { label: string; tone: Tone }> = {
