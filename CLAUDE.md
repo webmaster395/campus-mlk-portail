@@ -29,6 +29,8 @@ schéma Supabase prévu et l'avancement sont dans `PLAN.md` : le lire avant tout
   lit l'heure, interdit pendant un pré-rendu). Même règle pour `new Date()` dans une page :
   seulement après `await getViewer()` ou `await connection()`. Le build ne le détecte pas
   sur les routes à paramètres (`[courseId]`) : vérifier le journal du serveur de dev.
+- **Avant de pousser** : lancer `npm run build` (le serveur de dev ne signale pas tout). Un composant client
+  qui lit `usePathname()` / `useSearchParams()` doit être sous `<Suspense>`, y compris dans le layout racine.
 - **Auth** : connexion et déconnexion par actions serveur ; les liens d'e-mail arrivent sur
   `/auth/reinitialiser` (invitation, oubli) ou `/auth/confirm`, et le jeton n'est consommé
   qu'au clic. Toute redirection après un lien passe par `safeNextPath()`.

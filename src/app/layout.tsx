@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces } from "next/font/google";
+import { Suspense } from "react";
 import ThemeSync from "@/components/shell/ThemeSync";
 import "./globals.css";
 
@@ -35,7 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-screen">
-        <ThemeSync />
+        <Suspense fallback={null}>
+          <ThemeSync />
+        </Suspense>
         {children}
       </body>
     </html>
